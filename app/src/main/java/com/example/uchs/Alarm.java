@@ -10,4 +10,6 @@ public class Alarm {
         this.alarmType = type;
         this.alarmLocation = userLocation;
     }
+
+
 }

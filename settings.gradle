@@ -1,0 +1,2 @@
+rootProject.name='UCHS'
+include ':app'

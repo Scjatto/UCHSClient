@@ -20,9 +20,7 @@ public class AlarmStatusActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Community");
         Intent alarmStatusIntent = getIntent();
         Bundle alarmStatusBundle = alarmStatusIntent.getExtras();
-        String alarmMessage = "There has been a " + alarmStatusBundle.getString("ALARM_TYPE");
-        alarmMessage = alarmMessage + " by the user " + alarmStatusBundle.getString("USER_ID");
-        alarmMessage = alarmMessage + " from the location " + alarmStatusBundle.getString("ALARM_LOCATION");
+        String alarmMessage = alarmStatusBundle.getString("ACK");
 
         alarmMsg = (TextView)findViewById(R.id.alarmDetails);
         alarmMsg.setText(alarmMessage);

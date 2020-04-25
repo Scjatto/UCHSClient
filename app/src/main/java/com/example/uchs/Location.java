@@ -8,8 +8,8 @@ public class Location {
     public Location fetchLocation() {
         // TODO Call location API in an ASYNC Thread
         Location triggerLocation = new Location();
-        triggerLocation.latitude = 45.32;
-        triggerLocation.longitude = 160.42;
+        triggerLocation.latitude = 22.516085;
+        triggerLocation.longitude = 88.388869;
 
         return triggerLocation;
     }

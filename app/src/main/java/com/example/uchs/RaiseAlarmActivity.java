@@ -27,6 +27,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     private Button lost;
     private String setID;
     private RequestQueue requestQueue;
+//    private String serverResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +78,35 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         }
     };
 
-    public void sendAlarmToServer(Alarm alarm) {
-        String url = String.format("https://tribal-marker-274610.el.r.appspot.com/testname?name=%1$s", alarm.userID);
-        JsonObjectRequest jsonreq = new JsonObjectRequest(Request.Method.GET, url, null,
+    public void sendAlarmToServer(final Alarm alarm) {
+        String uID = alarm.userID;
+        String alarmID = alarm.alarmID;
+        final String alarmType = alarm.alarmType.replace(" ","");
+        Location alarmLocation = alarm.alarmLocation;
+        String strLocation = String.valueOf(alarmLocation.latitude) + "," + String.valueOf(alarmLocation.longitude);
+        String alarmTimeStamp = alarm.alarmTimeStamp;
+        String initUrl = "https://tribal-marker-274610.el.r.appspot.com/raiseAlarm?";
+        initUrl = initUrl + "userID=" + uID;
+        initUrl = initUrl + "&alarmID=" + alarmID;
+        initUrl = initUrl + "&alarmType=" + alarmType;
+        initUrl = initUrl + "&alarmTS=" + alarmTimeStamp;
+        initUrl = initUrl + "&alarmLoc=" + strLocation;
+        String url = String.format(initUrl);
+//        System.out.println(url);
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>(){
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject res = response.getJSONObject("data");
-                            System.out.println(res);
+                            JSONObject data = response.getJSONObject("data");
+//                            System.out.println(data);
+                            String serverResponse = data.getString("ACK");
+//                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));
+                            Intent alarmIntent = new Intent(RaiseAlarmActivity.this,AlarmStatusActivity.class);
+                            Bundle alarmBundle = new Bundle();
+                            alarmBundle.putString("ACK",serverResponse.replace(alarmType, alarm.alarmType));
+                            alarmIntent.putExtras(alarmBundle);
+                            startActivity(alarmIntent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -97,14 +118,14 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                     {
                     }
                 } );
-        requestQueue.add(jsonreq);
+        requestQueue.add(jsonReq);
     };
 
     private View.OnClickListener triggerAlarmListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Button tempBt = (Button)findViewById(v.getId());
-            System.out.println(tempBt.getText().toString());
+//            System.out.println(tempBt.getText().toString());
 
             Location triggerLocation = new Location(); // TODO Location API call {Async Thread}
             Location alarmLocation = triggerLocation.fetchLocation();
@@ -114,13 +135,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             Alarm alarm = new Alarm(userID, alarmType, alarmLocation);
             // TODO Send alarm to Server Endpoint {NEED async task extension of Alarm class}
             sendAlarmToServer(alarm);
-            Intent alarmIntent = new Intent(RaiseAlarmActivity.this,AlarmStatusActivity.class);
-            Bundle alarmBundle = new Bundle();
-            alarmBundle.putString("USER_ID",userID);
-            alarmBundle.putString("ALARM_TYPE",alarmType);
-            alarmBundle.putString("ALARM_LOCATION",strAlarmLocation);
-            alarmIntent.putExtras(alarmBundle);
-            startActivity(alarmIntent);
 
         }
     };

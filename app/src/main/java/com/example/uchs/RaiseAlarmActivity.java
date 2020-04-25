@@ -8,6 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class RaiseAlarmActivity extends AppCompatActivity {
 
     private Button raise;
@@ -16,6 +26,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     private Button fire;
     private Button lost;
     private String setID;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +35,8 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 
         setID = getIntent().getStringExtra("RAISE_ALARM_ID");
         getSupportActionBar().setTitle(setID);
+
+        requestQueue = Volley.newRequestQueue(this);
 
         raise = (Button)findViewById(R.id.btRaiseAlarm);
         raiseLabel = (TextView)findViewById(R.id.txtRaiseAlarm);
@@ -64,6 +77,29 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         }
     };
 
+    public void sendAlarmToServer(Alarm alarm) {
+        String url = String.format("https://tribal-marker-274610.el.r.appspot.com/testname?name=%1$s", alarm.userID);
+        JsonObjectRequest jsonreq = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject res = response.getJSONObject("data");
+                            System.out.println(res);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                    }
+                } );
+        requestQueue.add(jsonreq);
+    };
+
     private View.OnClickListener triggerAlarmListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -77,6 +113,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             String alarmType = tempBt.getText().toString();
             Alarm alarm = new Alarm(userID, alarmType, alarmLocation);
             // TODO Send alarm to Server Endpoint {NEED async task extension of Alarm class}
+            sendAlarmToServer(alarm);
             Intent alarmIntent = new Intent(RaiseAlarmActivity.this,AlarmStatusActivity.class);
             Bundle alarmBundle = new Bundle();
             alarmBundle.putString("USER_ID",userID);

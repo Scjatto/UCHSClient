@@ -1,11 +1,14 @@
 package com.example.uchs;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -20,11 +23,15 @@ import org.json.JSONObject;
 
 public class RaiseAlarmActivity extends AppCompatActivity {
 
+    private ConstraintLayout layout;
     private Button raise;
     private TextView raiseLabel;
     private Button medical;
     private Button fire;
     private Button lost;
+    private ProgressBar reqProgress;
+    private TextView progressTxt;
+
     private String setID;
     private RequestQueue requestQueue;
 //    private String serverResponse;
@@ -39,11 +46,14 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(this);
 
+        layout = (ConstraintLayout) findViewById(R.id.raiseAlarmLayout);
         raise = (Button)findViewById(R.id.btRaiseAlarm);
         raiseLabel = (TextView)findViewById(R.id.txtRaiseAlarm);
         medical = (Button)findViewById(R.id.btMedical);
         fire = (Button)findViewById(R.id.btFire);
         lost = (Button)findViewById(R.id.btLost);
+        reqProgress = (ProgressBar)findViewById(R.id.requestProgress);
+        progressTxt = (TextView)findViewById(R.id.progressText);
 
         raise.setOnClickListener(raiseAlarmListener);
         medical.setOnClickListener(triggerAlarmListener);
@@ -78,7 +88,17 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         }
     };
 
-    public void sendAlarmToServer(final Alarm alarm) {
+    private void buttonStatus(boolean btStatus) {
+        for(int i=0; i< layout.getChildCount(); i++) {
+            View view = layout.getChildAt(i);
+
+            if (view instanceof Button) {
+                view.setEnabled(btStatus);
+            }
+        }
+    };
+
+    private void sendAlarmToServer(final Alarm alarm) {
         String uID = alarm.userID;
         String alarmID = alarm.alarmID;
         final String alarmType = alarm.alarmType.replace(" ","");
@@ -98,6 +118,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            reqProgress.setVisibility(View.GONE);
+                            progressTxt.setVisibility(View.GONE);
+                            buttonStatus(true);
+
                             JSONObject data = response.getJSONObject("data");
 //                            System.out.println(data);
                             String serverResponse = data.getString("ACK");
@@ -108,6 +132,8 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                             alarmIntent.putExtras(alarmBundle);
                             startActivity(alarmIntent);
                         } catch (JSONException e) {
+                            reqProgress.setVisibility(View.GONE);
+                            progressTxt.setVisibility(View.GONE);
                             e.printStackTrace();
                         }
                     }
@@ -118,6 +144,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                     {
                     }
                 } );
+        reqProgress.setVisibility(View.VISIBLE);
+        reqProgress.bringToFront();
+        progressTxt.setText("Raising Alarm ...");
+        progressTxt.setVisibility(View.VISIBLE);
         requestQueue.add(jsonReq);
     };
 
@@ -126,6 +156,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         public void onClick(View v) {
             Button tempBt = (Button)findViewById(v.getId());
 //            System.out.println(tempBt.getText().toString());
+            buttonStatus(false);
 
             Location triggerLocation = new Location(); // TODO Location API call {Async Thread}
             Location alarmLocation = triggerLocation.fetchLocation();

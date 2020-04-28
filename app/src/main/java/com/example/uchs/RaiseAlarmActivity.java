@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -121,19 +122,25 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                             reqProgress.setVisibility(View.GONE);
                             progressTxt.setVisibility(View.GONE);
                             buttonStatus(true);
-
-                            JSONObject data = response.getJSONObject("data");
+                            int responseStatus = response.getInt("status");
+                            if (responseStatus == 1) {
+                                JSONObject data = response.getJSONObject("data");
 //                            System.out.println(data);
-                            String serverResponse = data.getString("ACK");
+                                String serverResponse = data.getString("ACK");
 //                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));
-                            Intent alarmIntent = new Intent(RaiseAlarmActivity.this,AlarmStatusActivity.class);
-                            Bundle alarmBundle = new Bundle();
-                            alarmBundle.putString("ACK",serverResponse.replace(alarmType, alarm.alarmType));
-                            alarmIntent.putExtras(alarmBundle);
-                            startActivity(alarmIntent);
+                                Intent alarmIntent = new Intent(RaiseAlarmActivity.this, AlarmStatusActivity.class);
+                                Bundle alarmBundle = new Bundle();
+                                alarmBundle.putString("ACK", serverResponse.replace(alarmType, alarm.alarmType));
+                                alarmIntent.putExtras(alarmBundle);
+                                startActivity(alarmIntent);
+                            } else {
+                                String errorStr = "Server Error: Failed to raise Alarm";
+                                Toast.makeText(getApplicationContext(),errorStr,Toast.LENGTH_SHORT).show();
+                            }
                         } catch (JSONException e) {
                             reqProgress.setVisibility(View.GONE);
                             progressTxt.setVisibility(View.GONE);
+                            buttonStatus(true);
                             e.printStackTrace();
                         }
                     }

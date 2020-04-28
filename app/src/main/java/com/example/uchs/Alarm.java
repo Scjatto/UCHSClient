@@ -10,7 +10,7 @@ public class Alarm {
     public Location alarmLocation;
     public String alarmTimeStamp;
 
-    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
+    private static final String ALLOWED_CHARACTERS ="qwertyuiopasdfghjklzxcvbnm";
 
     private static String getRandomString(final int sizeOfRandomString)
     {
@@ -23,13 +23,11 @@ public class Alarm {
 
     Alarm(String user, String type, Location userLocation) {
         this.userID = user;
-        this.alarmID = getRandomString(10);
         this.alarmType = type;
         this.alarmLocation = userLocation;
-//        Date currentTime = Calendar.getInstance().getTime();
-//        this.alarmTimeStamp = currentTime.toString().replace(" ","");
         Long timeStamp = System.currentTimeMillis()/1000;
         this.alarmTimeStamp = String.valueOf(timeStamp);
+        this.alarmID = String.valueOf(timeStamp) + getRandomString(10);
         }
 
     }

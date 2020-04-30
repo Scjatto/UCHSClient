@@ -1,6 +1,8 @@
 package com.example.uchs;
 
 
+import android.text.format.DateFormat;
+
 import java.util.Random;
 
 public class Alarm {
@@ -30,6 +32,11 @@ public class Alarm {
         this.alarmID = String.valueOf(timeStamp) + getRandomString(10);
         }
 
+     public String humanReadableTimeStamp(String timeStamp) {
+        long epochTime = Long.parseLong(timeStamp) * 1000;
+        String dateTime = DateFormat.format("dd/MM/yyyy HH:mm:ss" , epochTime).toString();
+        return dateTime;
+     }
     }
 
 

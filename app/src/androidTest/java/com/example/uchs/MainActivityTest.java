@@ -40,8 +40,6 @@ public class MainActivityTest {
 
     @Test
     public void goToLoginActivity() {
-        View viewBtLogin = mainActivity.findViewById(R.id.btLogin);
-        assertNotNull(viewBtLogin);
         onView(ViewMatchers.withId(R.id.btLogin)).perform(click());
         Activity loginActivity = InstrumentationRegistry.getInstrumentation().waitForMonitor(monitor);
         assertNotNull(loginActivity);

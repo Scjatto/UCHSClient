@@ -2,6 +2,7 @@ package com.example.uchs;
 
 import android.view.View;
 
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -15,6 +16,7 @@ public class LoginActivityTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityTestRule = new ActivityTestRule<LoginActivity>(LoginActivity.class);
+//    public IntentsTestRule<LoginActivity> loginActivityIntentsTestRule =
 
     private LoginActivity loginActivity = null;
 
@@ -30,6 +32,17 @@ public class LoginActivityTest {
 
         View btLogin = loginActivity.findViewById(R.id.btFinLogin);
         assertNotNull(btLogin);
+    }
+
+    @Test
+    public void loginSuccess() {
+        View editIdPhone = loginActivity.findViewById(R.id.editIdPhone);
+        assertNotNull(editIdPhone);
+
+        View btLogin = loginActivity.findViewById(R.id.btFinLogin);
+        assertNotNull(btLogin);
+
+
     }
 
     @After

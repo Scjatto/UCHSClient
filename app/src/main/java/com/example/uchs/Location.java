@@ -14,7 +14,7 @@ public class Location {
         return triggerLocation;
     }
 
-    public String getLocationName() {
+    public String getLocationName(String location) {
 
         String locationName = "Locatable Location";
         return locationName;

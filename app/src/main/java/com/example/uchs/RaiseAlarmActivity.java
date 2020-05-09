@@ -101,14 +101,13 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 
     private void sendAlarmToServer(final Alarm alarm) {
         String uID = alarm.userID;
-        String alarmID = alarm.alarmID;
+//        String alarmID = alarm.alarmID;
         final String alarmType = alarm.alarmType.replace(" ","");
         final Location alarmLocation = alarm.alarmLocation;
         final String strLocation = String.valueOf(alarmLocation.latitude) + "," + String.valueOf(alarmLocation.longitude);
         final String alarmTimeStamp = alarm.alarmTimeStamp;
         String initUrl = "https://tribal-marker-274610.el.r.appspot.com/raiseAlarm?";
         initUrl = initUrl + "userID=" + uID;
-        initUrl = initUrl + "&alarmID=" + alarmID;
         initUrl = initUrl + "&alarmType=" + alarmType;
         initUrl = initUrl + "&alarmTS=" + alarmTimeStamp;
         initUrl = initUrl + "&alarmLoc=" + strLocation;
@@ -127,7 +126,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                                 JSONObject data = response.getJSONObject("data");
 //                            System.out.println(data);
                                 String serverResponse = data.getString("ACK");
-                                serverResponse = serverResponse.replace(strLocation, alarmLocation.getLocationName());
+                                serverResponse = serverResponse.replace(strLocation, alarmLocation.getLocationName(strLocation));
                                 serverResponse = serverResponse.replace(alarmTimeStamp , alarm.humanReadableTimeStamp(alarmTimeStamp));
 //                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));
                                 Intent alarmIntent = new Intent(RaiseAlarmActivity.this, AlarmStatusActivity.class);

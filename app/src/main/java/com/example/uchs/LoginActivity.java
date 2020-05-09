@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
             finLoginIntent.putExtras(dataExtra);
             startActivity(finLoginIntent);
+            finish();
 
 
 

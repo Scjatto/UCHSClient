@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+
     <TextView
         android:id="@+id/enterIdPhone"
         android:layout_width="127dp"
@@ -16,10 +17,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.316" />
+        app:layout_constraintVertical_bias="0.241" />
 
     <EditText
         android:id="@+id/editIdPhone"
@@ -30,10 +31,10 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.368" />
+        app:layout_constraintTop_toBottomOf="@+id/enterIdPhone"
+        app:layout_constraintVertical_bias="0.042" />
 
     <Button
         android:id="@+id/btFinLogin"
@@ -42,9 +43,37 @@
         android:enabled="false"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editPassword"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editPassword"
+        app:layout_constraintTop_toBottomOf="@+id/enterPassword"
         app:layout_constraintVertical_bias="0.727" />
+
+
+    <TextView
+        android:id="@+id/enterPassword"
+        android:layout_width="127dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:text="Password"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="@+id/enterIdPhone"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/enterIdPhone"
+        app:layout_constraintTop_toBottomOf="@+id/editIdPhone" />
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="341dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/btFinLogin"
+        app:layout_constraintEnd_toEndOf="@+id/editIdPhone"
+        app:layout_constraintHorizontal_bias="0.769"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enterPassword"
+        app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

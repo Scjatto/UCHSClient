@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText idphone;
+    private EditText password;
     private Button finLogin;
 
 
@@ -25,14 +26,16 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("UCHSLogin");
 
         idphone = (EditText)findViewById(R.id.editIdPhone);
+        password = (EditText)findViewById(R.id.editPassword);
         finLogin = (Button)findViewById(R.id.btFinLogin);
 
-        idphone.addTextChangedListener(idPhoneWatcher);
+        idphone.addTextChangedListener(contentEnterWatcher);
+        password.addTextChangedListener(contentEnterWatcher);
         finLogin.setOnClickListener(finLoginListener);
 
     }
 
-    private TextWatcher idPhoneWatcher = new TextWatcher() {
+    private TextWatcher contentEnterWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -41,8 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String idPhoneInput = idphone.getText().toString();
+            String passwdInput = password.getText().toString();
 
-            finLogin.setEnabled(!idPhoneInput.isEmpty());
+            finLogin.setEnabled(!idPhoneInput.isEmpty() && !passwdInput.isEmpty());
         }
 
         @Override

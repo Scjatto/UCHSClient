@@ -1,10 +1,12 @@
 package com.example.uchs;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +32,10 @@ public class ConfigureSopActivity extends AppCompatActivity {
 
         if(!pollStatus) {
             Intent intent = new Intent(ConfigureSopActivity.this,PollAlert.class);
+            Bundle serviceBundle = new Bundle();
+            serviceBundle.putString("AccountID",setTitle);
+
+            intent.putExtras(serviceBundle);
             startService(intent);
             pollStatus = true;
         }

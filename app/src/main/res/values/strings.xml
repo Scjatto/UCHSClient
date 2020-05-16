@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">UCHS</string>
+    <string-array name="professions">
+        <item>Doctor</item>
+        <item>Nurse</item>
+        <item>Police</item>
+        <item>Fire Fighter</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="Services">
+        <item>Medical</item>
+        <item>Police</item>
+        <item>Fire Fighter</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="categories">
+        <item>User</item>
+        <item>Helpline Service</item>
+    </string-array>
+
 </resources>

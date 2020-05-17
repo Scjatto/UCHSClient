@@ -14,6 +14,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PollAlert extends IntentService {
@@ -48,16 +50,49 @@ public class PollAlert extends IntentService {
     }
 
 
-    public void fetchAlert(RequestQueue requestQueue) {
-        String url = "https://jsonplaceholder.typicode.com/todos/1";
+    public void fetchAlert(RequestQueue requestQueue, String accountID, String accountType) {
+//        String url = "https://jsonplaceholder.typicode.com/todos/1";
+        String url = "https://tribal-marker-274610.el.r.appspot.com/";
+        if (accountType.toLowerCase().equals("user")) {
+//            url = "https://tribal-marker-274610.el.r.appspot.com/checkUserAlerts?";
+            url += "checkUserAlerts?uid=" + accountID;
+        }
+        else if (accountType.toLowerCase().equals("helpline")) {
+            url += "checkHelplineAlerts?hid=" + accountID;
+        }
+
+
         url = String.format(url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        String data = response.toString();
-                        System.out.println("Response from server >>>>>>>: " + data);
+                        try {
+                            int status = response.getInt("status");
+                            if (status == 1) {
+                                JSONArray alertDetails = response.getJSONArray("alarmDetails");
+                                for (int itr = 0; itr < alertDetails.length(); itr ++) {
+                                    JSONObject eachAlert = alertDetails.getJSONObject(itr);
+
+                                    String alarmType = eachAlert.getString("atype");
+                                    double alarmLat = eachAlert.getDouble("lat");
+                                    double alarmLon = eachAlert.getDouble("lon");
+                                    long alarmTS = eachAlert.getLong("tstamp");
+                                    String alarmUser = eachAlert.getString("user");
+
+                                    Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
+                                    String msg = alert.genAlertMsg();
+                                    System.out.println(msg);
+                                }
+                            }
+                            else {
+                                System.out.println("Something Went Wrong!!");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//                        System.out.println("Response from server >>>>>>>: " + data);
                         // TODO Notification Builder with alert message
                     }
                 }, new Response.ErrorListener() {
@@ -77,19 +112,20 @@ public class PollAlert extends IntentService {
         Bundle dataBundle = intent.getExtras();
         assert dataBundle != null;
         String accountID = dataBundle.getString("AccountID");
+        String accountType = dataBundle.getString("IDType");
 
         while (true) {
             // TODO Poll API {Later}
             // TODO Notification Builder {Initial Testing}
             // NOW Simulating timer
             incrementTimer();
+            System.out.println(accountID + ":: Time Now: " + String.valueOf(timeVal));
+
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            fetchAlert(requestQueue);
-            if (timeVal % 5 == 0) {
-                System.out.println(accountID + ":: Time Now: " + String.valueOf(timeVal));
-            }
+            fetchAlert(requestQueue, accountID, accountType);
+
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

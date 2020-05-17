@@ -34,6 +34,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             Intent intent = new Intent(ConfigureSopActivity.this,PollAlert.class);
             Bundle serviceBundle = new Bundle();
             serviceBundle.putString("AccountID",setTitle);
+            serviceBundle.putString("IDType","User");
 
             intent.putExtras(serviceBundle);
             startService(intent);
@@ -46,7 +47,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(false);
+        moveTaskToBack(true);
     }
 
     private View.OnClickListener skipToRaiseAlarm = new View.OnClickListener() {

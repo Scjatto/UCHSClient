@@ -74,8 +74,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             raise.setVisibility(View.VISIBLE);
 
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            moveTaskToBack(true);
         }
+
     }
 
     private View.OnClickListener raiseAlarmListener = new View.OnClickListener() {
@@ -109,7 +111,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         String initUrl = "https://tribal-marker-274610.el.r.appspot.com/raiseAlarm?";
         initUrl = initUrl + "userID=" + uID;
         initUrl = initUrl + "&alarmType=" + alarmType;
-        initUrl = initUrl + "&alarmTS=" + alarmTimeStamp;
+//        initUrl = initUrl + "&alarmTS=" + alarmTimeStamp;
         initUrl = initUrl + "&alarmLoc=" + strLocation;
         String url = String.format(initUrl);
 //        System.out.println(url);
@@ -127,7 +129,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 //                            System.out.println(data);
                                 String serverResponse = data.getString("ACK");
                                 serverResponse = serverResponse.replace(strLocation, alarmLocation.getLocationName(strLocation));
-                                serverResponse = serverResponse.replace(alarmTimeStamp , alarm.humanReadableTimeStamp(alarmTimeStamp));
+//                                serverResponse = serverResponse.replace(alarmTimeStamp , alarm.humanReadableTimeStamp(alarmTimeStamp));
 //                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));
                                 Intent alarmIntent = new Intent(RaiseAlarmActivity.this, AlarmStatusActivity.class);
                                 Bundle alarmBundle = new Bundle();

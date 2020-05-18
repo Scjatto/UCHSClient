@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 public class LoginActivity extends AppCompatActivity {
+
+    Spinner spinner_login_cat;
+    ArrayAdapter<CharSequence> adapter_login_cat;
 
     private EditText idphone;
     private EditText password;
@@ -32,6 +36,11 @@ public class LoginActivity extends AppCompatActivity {
         idphone.addTextChangedListener(contentEnterWatcher);
         password.addTextChangedListener(contentEnterWatcher);
         finLogin.setOnClickListener(finLoginListener);
+
+        spinner_login_cat = (Spinner) findViewById(R.id.login_edit_category);
+        adapter_login_cat = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+        adapter_login_cat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_login_cat.setAdapter(adapter_login_cat);
 
     }
 

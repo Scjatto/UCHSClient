@@ -3,6 +3,7 @@ package com.example.uchs;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -57,12 +58,13 @@ public class PollAlert extends IntentService {
 //            url = "https://tribal-marker-274610.el.r.appspot.com/checkUserAlerts?";
             url += "checkUserAlerts?uid=" + accountID;
         }
-        else if (accountType.toLowerCase().equals("helpline")) {
+        else if (accountType.toLowerCase().equals("help")) {
             url += "checkHelplineAlerts?hid=" + accountID;
         }
 
 
         url = String.format(url);
+        System.out.println(url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -72,19 +74,24 @@ public class PollAlert extends IntentService {
                             int status = response.getInt("status");
                             if (status == 1) {
                                 JSONArray alertDetails = response.getJSONArray("alarmDetails");
-                                for (int itr = 0; itr < alertDetails.length(); itr ++) {
-                                    JSONObject eachAlert = alertDetails.getJSONObject(itr);
+                                if (alertDetails.length() != 0) {
+                                    for (int itr = 0; itr < alertDetails.length(); itr ++) {
+                                        JSONObject eachAlert = alertDetails.getJSONObject(itr);
 
-                                    String alarmType = eachAlert.getString("atype");
-                                    double alarmLat = eachAlert.getDouble("lat");
-                                    double alarmLon = eachAlert.getDouble("lon");
-                                    long alarmTS = eachAlert.getLong("tstamp");
-                                    String alarmUser = eachAlert.getString("user");
+                                        String alarmType = eachAlert.getString("atype");
+                                        double alarmLat = eachAlert.getDouble("lat");
+                                        double alarmLon = eachAlert.getDouble("lon");
+                                        long alarmTS = eachAlert.getLong("tstamp");
+                                        String alarmUser = eachAlert.getString("user");
 
-                                    Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
-                                    String msg = alert.genAlertMsg();
-                                    System.out.println(msg);
+                                        Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
+                                        String msg = alert.genAlertMsg();
+                                        System.out.println(msg);
+                                    }
+                                } else {
+                                    System.out.println("No alert found");
                                 }
+
                             }
                             else {
                                 System.out.println("Something Went Wrong!!");
@@ -98,7 +105,9 @@ public class PollAlert extends IntentService {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                long timeEpoch = System.currentTimeMillis();
+                String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();
+                System.out.println(time + " Server Not Responding:: " + error.getMessage());
             }
         });
 

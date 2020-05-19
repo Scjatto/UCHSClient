@@ -16,6 +16,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
     private TextView gotToRaiseAlarm = null;
 
     private String setTitle = null;
+    private String titleType = null;
 
     private boolean pollStatus;
 
@@ -27,6 +28,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
         Intent getIntent = getIntent();
         Bundle dataExtras = getIntent.getExtras();
         setTitle = dataExtras.getString("CONFIGURE_SOP_TITLE");
+        titleType = dataExtras.getString("USER_TYPE");
 
         getSupportActionBar().setTitle(setTitle);
 
@@ -34,7 +36,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             Intent intent = new Intent(ConfigureSopActivity.this,PollAlert.class);
             Bundle serviceBundle = new Bundle();
             serviceBundle.putString("AccountID",setTitle);
-            serviceBundle.putString("IDType","User");
+            serviceBundle.putString("IDType",titleType);
 
             intent.putExtras(serviceBundle);
             startService(intent);

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    public void verifyLogin(final String uid, String uPass, final String userType, RequestQueue requestQueue) {
+    public void verifyLogin(final String uid, final String uPass, final String userType, RequestQueue requestQueue) {
 //        String url = "https://jsonplaceholder.typicode.com/todos/1";
         String url = "https://tribal-marker-274610.el.r.appspot.com/login?";
         url += "type=" + userType;
@@ -125,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Bundle dataExtra = new Bundle();
                                     dataExtra.putString("CONFIGURE_SOP_TITLE",uid);
                                     dataExtra.putString("USER_TYPE",userType);
-
+                                    saveCredentials(uid, uPass, userType);
                                     finLoginIntent.putExtras(dataExtra);
                                     startActivity(finLoginIntent);
                                     finish();
@@ -159,6 +160,16 @@ public class LoginActivity extends AppCompatActivity {
         finLogin.setEnabled(false);
         spinner_login_cat.setEnabled(false);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void saveCredentials(String accID, String accPass, String accType) {
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("ACC_ID", accID);
+        editor.putString("ACC_PASS", accPass);
+        editor.putString("ACC_TYPE", accType);
+
+        editor.apply();
     }
 
 

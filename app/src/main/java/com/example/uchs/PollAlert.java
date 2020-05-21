@@ -2,8 +2,10 @@ package com.example.uchs;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,8 +28,15 @@ public class PollAlert extends IntentService {
      * @param name Used to name the worker thread, important only for debugging.
      */
     private int timeVal;
+    private boolean pollStopStatus = false;
+    private String accountID;
+    private String accountType;
+
+    public static final String DEBUG_TAG = "PollAlert";
+
     public PollAlert() {
-        super("Poll_Alert");
+        super("PollAlert");
+        setIntentRedelivery(true);
     }
 
     private void startTimer() {
@@ -44,9 +53,9 @@ public class PollAlert extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        startTimer();
-        String msg = "Timer Started with timeVal: " + String.valueOf(timeVal);
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+//        startTimer();
+//        String msg = "Timer Started with timeVal: " + String.valueOf(timeVal);
+//        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -65,6 +74,7 @@ public class PollAlert extends IntentService {
 
         url = String.format(url);
         System.out.println(url);
+        Log.d(DEBUG_TAG, url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -87,14 +97,17 @@ public class PollAlert extends IntentService {
                                         Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
                                         String msg = alert.genAlertMsg();
                                         System.out.println(msg);
+                                        Log.d(DEBUG_TAG, msg);
                                     }
                                 } else {
                                     System.out.println("No alert found");
+                                    Log.d(DEBUG_TAG, "No alert found");
                                 }
 
                             }
                             else {
                                 System.out.println("Something Went Wrong!!");
+                                Log.d(DEBUG_TAG, "Something Went Wrong!!");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -108,6 +121,7 @@ public class PollAlert extends IntentService {
                 long timeEpoch = System.currentTimeMillis();
                 String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();
                 System.out.println(time + " Server Not Responding:: " + error.getMessage());
+                Log.d(DEBUG_TAG, time + " Server Not Responding:: " + error.getMessage());
             }
         });
 
@@ -120,15 +134,15 @@ public class PollAlert extends IntentService {
         assert intent != null;
         Bundle dataBundle = intent.getExtras();
         assert dataBundle != null;
-        String accountID = dataBundle.getString("AccountID");
-        String accountType = dataBundle.getString("IDType");
+        accountID = dataBundle.getString("AccountID");
+        accountType = dataBundle.getString("IDType");
 
         while (true) {
-            // TODO Poll API {Later}
             // TODO Notification Builder {Initial Testing}
             // NOW Simulating timer
-            incrementTimer();
-            System.out.println(accountID + ":: Time Now: " + String.valueOf(timeVal));
+//            incrementTimer();
+//            System.out.println(accountID + ":: Time Now: " + String.valueOf(timeVal));
+//            Log.d(DEBUG_TAG, accountID + ":: Time Now: " + String.valueOf(timeVal));
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             fetchAlert(requestQueue, accountID, accountType);
@@ -138,16 +152,21 @@ public class PollAlert extends IntentService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            if (pollStopStatus) {
+                break;
+            }
         }
     }
 
     @Override
     public void onDestroy() {
-        String msg = "Timer stopped with timeVal: " + String.valueOf(timeVal);
-        endTimer();
-        msg += "Time reset to : " + String.valueOf(timeVal);
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
-        stopSelf();
+//        String msg = "Timer stopped with timeVal: " + String.valueOf(timeVal);
+//        endTimer();
+//        msg += "Time reset to : " + String.valueOf(timeVal);
+//        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+        pollStopStatus = true;
+//        Toast.makeText(getApplicationContext(),"API Polling Stopped",Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 }

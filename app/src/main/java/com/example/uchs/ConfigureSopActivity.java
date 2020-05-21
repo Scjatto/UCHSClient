@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
@@ -14,11 +15,12 @@ import android.widget.TextView;
 public class ConfigureSopActivity extends AppCompatActivity {
 
     private TextView gotToRaiseAlarm = null;
+    private Button logout;
 
     private String setTitle = null;
     private String titleType = null;
 
-    private boolean pollStatus;
+    private static boolean pollStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,33 @@ public class ConfigureSopActivity extends AppCompatActivity {
         }
 
         gotToRaiseAlarm = (TextView)findViewById(R.id.skipToAlarm);
+        logout = (Button)findViewById(R.id.btLogout);
+
         gotToRaiseAlarm.setOnClickListener(skipToRaiseAlarm);
+        logout.setOnClickListener(logOut);
+
+        if (titleType.equals("help")) {
+            gotToRaiseAlarm.setVisibility(View.INVISIBLE);
+        }
     }
+
+    private View.OnClickListener logOut = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent logoutIntent = new Intent(ConfigureSopActivity.this,LoginActivity.class);
+            Intent serviceStopIntent = new Intent(ConfigureSopActivity.this,PollAlert.class);
+            SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("ACC_ID", "");
+            editor.putString("ACC_PASS", "");
+            editor.putString("ACC_TYPE", "");
+
+            editor.apply();
+            pollStatus = false;
+            stopService(serviceStopIntent);
+            startActivity(logoutIntent);
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -58,9 +85,16 @@ public class ConfigureSopActivity extends AppCompatActivity {
             Intent raiseAlarmIntent = new Intent(ConfigureSopActivity.this,RaiseAlarmActivity.class);
             Bundle dataBundle = new Bundle();
             dataBundle.putString("RAISE_ALARM_ID",setTitle);
+            dataBundle.putString("ID_TYPE",titleType);
 
             raiseAlarmIntent.putExtras(dataBundle);
             startActivity(raiseAlarmIntent);
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        pollStatus = true;
+        super.onDestroy();
+    }
 }

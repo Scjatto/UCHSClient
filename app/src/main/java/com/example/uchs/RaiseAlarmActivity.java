@@ -32,8 +32,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     private Button lost;
     private ProgressBar reqProgress;
     private TextView progressTxt;
+    private TextView backToSOP;
 
     private String setID;
+    private String idType;
     private RequestQueue requestQueue;
 //    private String serverResponse;
 
@@ -43,6 +45,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_raise_alarm);
 
         setID = getIntent().getStringExtra("RAISE_ALARM_ID");
+        idType = getIntent().getStringExtra("ID_TYPE");
         getSupportActionBar().setTitle(setID);
 
         requestQueue = Volley.newRequestQueue(this);
@@ -55,12 +58,26 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         lost = (Button)findViewById(R.id.btLost);
         reqProgress = (ProgressBar)findViewById(R.id.requestProgress);
         progressTxt = (TextView)findViewById(R.id.progressText);
+        backToSOP = (TextView)findViewById(R.id.txtBackToSOP);
 
         raise.setOnClickListener(raiseAlarmListener);
         medical.setOnClickListener(triggerAlarmListener);
         fire.setOnClickListener(triggerAlarmListener);
         lost.setOnClickListener(triggerAlarmListener);
+        backToSOP.setOnClickListener(goToSOPListener);
     }
+
+    private View.OnClickListener goToSOPListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(RaiseAlarmActivity.this,ConfigureSopActivity.class);
+            Bundle dataBundle = new Bundle();
+            dataBundle.putString("CONFIGURE_SOP_TITLE",setID);
+            dataBundle.putString("USER_TYPE",idType);
+            intent.putExtras(dataBundle);
+            startActivity(intent);
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -72,7 +89,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             fire.setVisibility(View.INVISIBLE);
             lost.setVisibility(View.INVISIBLE);
             raise.setVisibility(View.VISIBLE);
-
+            backToSOP.setVisibility(View.VISIBLE);
         } else {
 //            super.onBackPressed();
             moveTaskToBack(true);
@@ -84,6 +101,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             raise.setVisibility(View.INVISIBLE);
+            backToSOP.setVisibility(View.INVISIBLE);
             raiseLabel.setVisibility(View.VISIBLE);
             medical.setVisibility(View.VISIBLE);
             fire.setVisibility(View.VISIBLE);

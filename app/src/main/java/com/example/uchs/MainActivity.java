@@ -3,6 +3,7 @@ package com.example.uchs;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",MODE_PRIVATE);
+        String accID = sharedPreferences.getString("ACC_ID","");
+        String accPass = sharedPreferences.getString("ACC_PASS","");
+        String accType = sharedPreferences.getString("ACC_TYPE","");
+
+        if(!accID.equals("") && !accPass.equals("") && !accType.equals("")) {
+            if (accType.equals("user")) {
+                Intent intent = new Intent(this, RaiseAlarmActivity.class);
+                Bundle dataBundle = new Bundle();
+                dataBundle.putString("RAISE_ALARM_ID", accID);
+                dataBundle.putString("ID_TYPE", accType);
+                intent.putExtras(dataBundle);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, ConfigureSopActivity.class);
+                Bundle dataBundle = new Bundle();
+                dataBundle.putString("CONFIGURE_SOP_TITLE",accID);
+                dataBundle.putString("USER_TYPE",accType);
+                intent.putExtras(dataBundle);
+                startActivity(intent);
+            }
+        }
+
+
 
         // UI components assigned to class variables
         register = (Button)findViewById(R.id.btRegister);

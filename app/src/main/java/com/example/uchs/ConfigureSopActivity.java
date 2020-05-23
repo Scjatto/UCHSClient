@@ -20,7 +20,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
     private String setTitle = null;
     private String titleType = null;
 
-    private static boolean pollStatus;
+    private boolean pollStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             pollStatus = false;
             stopService(serviceStopIntent);
             startActivity(logoutIntent);
+            finish();
         }
     };
 

@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             Intent regIntent = new Intent(MainActivity.this,RegisterActivity.class);
             startActivity(regIntent);
+            finish();
         }
     };
 

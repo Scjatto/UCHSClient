@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -118,10 +120,14 @@ public class PollAlert extends IntentService {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                long timeEpoch = System.currentTimeMillis();
-                String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();
-                System.out.println(time + " Server Not Responding:: " + error.getMessage());
-                Log.d(DEBUG_TAG, time + " Server Not Responding:: " + error.getMessage());
+                String msg;
+                if (error instanceof NoConnectionError) {
+                    msg = "No Internet detected. Please check your internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                Log.d(DEBUG_TAG, " Server Not Responding:: " + error.getMessage());
             }
         });
 

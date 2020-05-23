@@ -12,9 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -137,10 +141,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>(){
                     @Override
                     public void onResponse(JSONObject response) {
+                        reqProgress.setVisibility(View.GONE);
+                        progressTxt.setVisibility(View.GONE);
+                        buttonStatus(true);
                         try {
-                            reqProgress.setVisibility(View.GONE);
-                            progressTxt.setVisibility(View.GONE);
-                            buttonStatus(true);
                             int responseStatus = response.getInt("status");
                             if (responseStatus == 1) {
                                 JSONObject data = response.getJSONObject("data");
@@ -159,9 +163,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),errorStr,Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            reqProgress.setVisibility(View.GONE);
-                            progressTxt.setVisibility(View.GONE);
-                            buttonStatus(true);
                             e.printStackTrace();
                         }
                     }
@@ -170,12 +171,25 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
+                        reqProgress.setVisibility(View.GONE);
+                        progressTxt.setVisibility(View.GONE);
+                        buttonStatus(true);
+                        String msg;
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            msg = "Request Timed Out!! Check your internet connection and try again";
+                        } else {
+                            msg = "Server Not Responding!!";
+                        }
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     }
                 } );
         reqProgress.setVisibility(View.VISIBLE);
         reqProgress.bringToFront();
         progressTxt.setText("Raising Alarm ...");
         progressTxt.setVisibility(View.VISIBLE);
+        int socketTimeOut = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonReq.setRetryPolicy(policy);
         requestQueue.add(jsonReq);
     };
 

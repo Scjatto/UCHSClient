@@ -8,7 +8,7 @@
     tools:context=".RegisterActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/register"
+        android:id="@+id/registerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -62,10 +62,27 @@
             android:hint="Enter Your Phone No."
             android:inputType="phone"
             android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.106"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_Phoneno" />
+            app:layout_constraintTop_toBottomOf="@+id/enter_Phoneno"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/edit_AgeLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:ems="10"
+            android:hint="Enter Age"
+            android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.106"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/enterAgeLoc"
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/edit_Name"
@@ -77,10 +94,12 @@
             android:hint="Enter Your Name"
             android:inputType="textPersonName"
             android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.106"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_Name" />
+            app:layout_constraintTop_toBottomOf="@+id/enter_Name"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/enter_Profession"
@@ -95,27 +114,59 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_Phoneno" />
 
+        <TextView
+            android:id="@+id/enterAgeLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="80dp"
+            android:text="Age"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.054"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Phoneno" />
+
         <Spinner
             android:id="@+id/edit_Profession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintHorizontal_bias="0.056"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_Profession" />
+            app:layout_constraintTop_toBottomOf="@+id/enter_Profession"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/edit_Password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.106"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/enter_Password"
+            app:layout_constraintVertical_bias="0.02" />
 
         <TextView
             android:id="@+id/enter_Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="96dp"
             android:text="Username"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.065"
+            app:layout_constraintHorizontal_bias="0.071"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_Profession" />
 
@@ -129,38 +180,25 @@
             android:hint="Enter Username"
             android:inputType="textPersonName"
             android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.106"
+            app:layout_constraintHorizontal_bias="0.117"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_Username" />
+            app:layout_constraintTop_toBottomOf="@+id/enter_Username"
+            app:layout_constraintVertical_bias="0.016" />
 
         <TextView
             android:id="@+id/enter_Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="Password"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.059"
+            app:layout_constraintHorizontal_bias="0.064"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_Username" />
-
-        <EditText
-            android:id="@+id/edit_Password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:ems="10"
-            android:hint="Enter Password"
-            android:inputType="textPassword"
-            android:textAlignment="textStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.08"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_Password" />
 
         <TextView
             android:id="@+id/enter_Category"
@@ -187,13 +225,15 @@
             app:layout_constraintTop_toBottomOf="@+id/enter_Category" />
 
         <Button
-            android:id="@+id/submit_register"
+            android:id="@+id/btSubmitRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_Password" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_Password"
+            app:layout_constraintVertical_bias="0.659" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

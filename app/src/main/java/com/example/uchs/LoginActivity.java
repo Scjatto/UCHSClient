@@ -17,9 +17,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -148,10 +152,16 @@ public class LoginActivity extends AppCompatActivity {
                 password.setEnabled(true);
                 finLogin.setEnabled(true);
                 spinner_login_cat.setEnabled(true);
-                long timeEpoch = System.currentTimeMillis();
-                String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();
-                System.out.println(time + " Server Not Responding:: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),"Server Not Responding!!", Toast.LENGTH_SHORT).show();
+                String msg;
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    msg = "Request Timed Out!! Check your internet connection and try again";
+                } else {
+                    long timeEpoch = System.currentTimeMillis();
+                    String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();
+                    msg = "Server Not Responding!!";
+                    System.out.println(time + " Server Not Responding:: " + error.getMessage());
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -159,6 +169,9 @@ public class LoginActivity extends AppCompatActivity {
         password.setEnabled(false);
         finLogin.setEnabled(false);
         spinner_login_cat.setEnabled(false);
+        int socketTimeOut = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -190,15 +203,12 @@ public class LoginActivity extends AppCompatActivity {
 
             RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
             verifyLogin(id, pass, uType, requestQueue);
-//            Intent finLoginIntent = new Intent(LoginActivity.this,ConfigureSopActivity.class);
-//            Bundle dataExtra = new Bundle();
-//            dataExtra.putString("CONFIGURE_SOP_TITLE",id);
-//            dataExtra.putString("USER_TYPE",userType);
-//
-//            finLoginIntent.putExtras(dataExtra);
-//            startActivity(finLoginIntent);
-//            finish();
 
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }

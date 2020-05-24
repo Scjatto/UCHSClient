@@ -107,9 +107,10 @@ public class PollAlert extends IntentService {
                                         String alarmUser = eachAlert.getString("user");
 
                                         Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
-                                        String msg = alert.genAlertMsg();
-                                        System.out.println(msg);
-                                        Log.d(DEBUG_TAG, msg);
+                                        String onNotifMsg = alert.genAlertMsg();
+                                        String detailedMsg = alert.genDetailedMsg();
+                                        Log.d(DEBUG_TAG, onNotifMsg);
+                                        Log.d(DEBUG_TAG, detailedMsg);
                                     }
                                 } else {
                                     System.out.println("No alert found");
@@ -214,7 +215,8 @@ public class PollAlert extends IntentService {
         intent_not.putExtra("message", "Alert found from Medical Category");
         intent_not.putExtra("id", Integer.toString(not_id));
         intent_not.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, not_id, intent_not, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, not_id, intent_not,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add_alert)

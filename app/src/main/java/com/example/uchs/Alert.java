@@ -38,4 +38,12 @@ public class Alert {
 
         return msg;
     }
+    public String genDetailedMsg() {
+        String msg = "Alarm Type: " + alertAlarmType + "\n";
+        msg += "Raised By: " + alertAlarmUser + "\n";
+        msg += "Location: " + getLocationString(alertAlarmLat, alertAlarmLong) + "\n";
+        msg += "Time of Raised Alarm: " + humanReadableTimeStamp(alertAlarmTS) + "\n";
+
+        return msg;
+    }
 }

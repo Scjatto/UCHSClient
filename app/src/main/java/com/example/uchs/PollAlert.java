@@ -6,12 +6,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -22,7 +19,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -111,6 +107,11 @@ public class PollAlert extends IntentService {
                                         String detailedMsg = alert.genDetailedMsg();
                                         Log.d(DEBUG_TAG, onNotifMsg);
                                         Log.d(DEBUG_TAG, detailedMsg);
+                                        createNotificationChannel();
+                                        notificationManager = NotificationManagerCompat.from(PollAlert.this);
+                                        int not_id = (int) System.currentTimeMillis();
+                                        sendNotification(not_id, onNotifMsg, detailedMsg);
+                                        Log.d(DEBUG_TAG, "Notification sent");
                                     }
                                 } else {
                                     System.out.println("No alert found");
@@ -125,8 +126,6 @@ public class PollAlert extends IntentService {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-//                        System.out.println("Response from server >>>>>>>: " + data);
-                        // TODO Notification Builder with alert message
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -153,24 +152,11 @@ public class PollAlert extends IntentService {
         assert dataBundle != null;
         accountID = dataBundle.getString("AccountID");
         accountType = dataBundle.getString("IDType");
-        int not_id = 1;
 
         while (true) {
-            // TODO Notification Builder {Initial Testing}
-            // NOW Simulating timer
-//            incrementTimer();
-//            System.out.println(accountID + ":: Time Now: " + String.valueOf(timeVal));
-//            Log.d(DEBUG_TAG, accountID + ":: Time Now: " + String.valueOf(timeVal));
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             fetchAlert(requestQueue, accountID, accountType);
-            createNotificationChannel();
-            System.out.println("Notification Channel Created");
-            notificationManager = NotificationManagerCompat.from(this);
-            System.out.println("Preparing to create Notification");
-            sendNotification(not_id);
-            not_id++;
-            System.out.println("Notification sent");
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
@@ -207,13 +193,11 @@ public class PollAlert extends IntentService {
         }
     }
 
-    public void sendNotification(int not_id) {
+    public void sendNotification(int not_id, String onNotifmsg, String detailedMessage) {
         String title = "Alert";
-        String small_message = "Alert Found " + not_id;
 
         Intent intent_not = new Intent(this, NotificationActivity.class);
-        intent_not.putExtra("message", "Alert found from Medical Category");
-        intent_not.putExtra("id", Integer.toString(not_id));
+        intent_not.putExtra("message", detailedMessage);
         intent_not.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, not_id, intent_not,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
@@ -221,7 +205,7 @@ public class PollAlert extends IntentService {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add_alert)
                 .setContentTitle(title)
-                .setContentText(small_message)
+                .setContentText(onNotifmsg)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(pendingIntent)

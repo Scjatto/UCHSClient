@@ -20,10 +20,8 @@ public class NotificationActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         System.out.println(("New notification instance created"));
         String msg = intent.getStringExtra("message") ;
-        String id = intent.getStringExtra("id") ;
         System.out.println("Message : "+msg);
-        System.out.println("Notification id : "+id);
         TextView tvNotify = findViewById(R.id.notification_view) ;
-        tvNotify.setText(msg+id) ;
+        tvNotify.setText(msg) ;
     }
 }

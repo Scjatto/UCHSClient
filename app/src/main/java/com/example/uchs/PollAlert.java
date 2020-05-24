@@ -1,14 +1,22 @@
 package com.example.uchs;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -35,6 +43,8 @@ public class PollAlert extends IntentService {
     private String accountType;
 
     public static final String DEBUG_TAG = "PollAlert";
+    public static final String CHANNEL_ID = "channel1";
+    private NotificationManagerCompat notificationManager;
 
     public PollAlert() {
         super("PollAlert");
@@ -142,6 +152,7 @@ public class PollAlert extends IntentService {
         assert dataBundle != null;
         accountID = dataBundle.getString("AccountID");
         accountType = dataBundle.getString("IDType");
+        int not_id = 1;
 
         while (true) {
             // TODO Notification Builder {Initial Testing}
@@ -152,7 +163,13 @@ public class PollAlert extends IntentService {
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             fetchAlert(requestQueue, accountID, accountType);
-
+            createNotificationChannel();
+            System.out.println("Notification Channel Created");
+            notificationManager = NotificationManagerCompat.from(this);
+            System.out.println("Preparing to create Notification");
+            sendNotification(not_id);
+            not_id++;
+            System.out.println("Notification sent");
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
@@ -174,5 +191,40 @@ public class PollAlert extends IntentService {
         pollStopStatus = true;
 //        Toast.makeText(getApplicationContext(),"API Polling Stopped",Toast.LENGTH_LONG).show();
         super.onDestroy();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Alert Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("This is Alert Channel");
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    public void sendNotification(int not_id) {
+        String title = "Alert";
+        String small_message = "Alert Found " + not_id;
+
+        Intent intent_not = new Intent(this, NotificationActivity.class);
+        intent_not.putExtra("message", "Alert found from Medical Category");
+        intent_not.putExtra("id", Integer.toString(not_id));
+        intent_not.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, not_id, intent_not, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_add_alert)
+                .setContentTitle(title)
+                .setContentText(small_message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        notificationManager.notify(not_id, notification);
     }
 }

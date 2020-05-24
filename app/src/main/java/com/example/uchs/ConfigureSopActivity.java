@@ -63,13 +63,14 @@ public class ConfigureSopActivity extends AppCompatActivity {
             Intent serviceStopIntent = new Intent(ConfigureSopActivity.this,PollAlert.class);
             SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("ACC_ID", "");
-            editor.putString("ACC_PASS", "");
-            editor.putString("ACC_TYPE", "");
-
+//            editor.putString("ACC_ID", "");
+//            editor.putString("ACC_PASS", "");
+//            editor.putString("ACC_TYPE", "");
+            editor.clear();
             editor.apply();
             pollStatus = false;
             stopService(serviceStopIntent);
+            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(logoutIntent);
             finish();
         }

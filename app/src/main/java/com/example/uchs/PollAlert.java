@@ -158,7 +158,7 @@ public class PollAlert extends IntentService {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             fetchAlert(requestQueue, accountID, accountType);
             try {
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

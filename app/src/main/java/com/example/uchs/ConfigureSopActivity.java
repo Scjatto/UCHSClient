@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class ConfigureSopActivity extends AppCompatActivity {
 
-    private TextView gotToRaiseAlarm = null;
+    private Button gotToRaiseAlarm = null;
 
     private String setTitle = null;
     private String titleType = null;
@@ -51,7 +51,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             pollStatus = true;
         }
 
-        gotToRaiseAlarm = (TextView)findViewById(R.id.skipToAlarm);
+        gotToRaiseAlarm = (Button) findViewById(R.id.button_skip);
         gotToRaiseAlarm.setOnClickListener(skipToRaiseAlarm);
 
         if (titleType.equals("help")) {

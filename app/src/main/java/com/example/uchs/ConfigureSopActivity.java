@@ -2,12 +2,19 @@ package com.example.uchs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.IntentService;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,7 +22,6 @@ import android.widget.TextView;
 public class ConfigureSopActivity extends AppCompatActivity {
 
     private TextView gotToRaiseAlarm = null;
-    private Button logout;
 
     private String setTitle = null;
     private String titleType = null;
@@ -46,35 +52,72 @@ public class ConfigureSopActivity extends AppCompatActivity {
         }
 
         gotToRaiseAlarm = (TextView)findViewById(R.id.skipToAlarm);
-        logout = (Button)findViewById(R.id.btLogout);
-
         gotToRaiseAlarm.setOnClickListener(skipToRaiseAlarm);
-        logout.setOnClickListener(logOut);
 
         if (titleType.equals("help")) {
             gotToRaiseAlarm.setVisibility(View.INVISIBLE);
         }
     }
 
-    private View.OnClickListener logOut = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent logoutIntent = new Intent(ConfigureSopActivity.this,LoginActivity.class);
-            Intent serviceStopIntent = new Intent(ConfigureSopActivity.this,PollAlert.class);
-            SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.putString("ACC_ID", "");
-//            editor.putString("ACC_PASS", "");
-//            editor.putString("ACC_TYPE", "");
-            editor.clear();
-            editor.apply();
-            pollStatus = false;
-            stopService(serviceStopIntent);
-            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(logoutIntent);
-            finish();
+    @SuppressLint("RestrictedApi")
+    public  boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.header_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
         }
-    };
+        MenuItem item = menu.findItem(R.id.configure_sop);
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.logout:
+                logoutdialogue();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void logoutdialogue(){
+        AlertDialog.Builder logdial = new AlertDialog.Builder(ConfigureSopActivity.this);
+        logdial.setMessage("Are you sure you want to logout ?").setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logoutmethod();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog logalert = logdial.create();
+        logalert.setTitle("Logout");
+        logalert.show();
+    }
+
+    private void logoutmethod() {
+        Intent logoutIntent = new Intent(ConfigureSopActivity.this,MainActivity.class);
+        Intent serviceStopIntent = new Intent(ConfigureSopActivity.this,PollAlert.class);
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        pollStatus = false;
+        stopService(serviceStopIntent);
+        logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(logoutIntent);
+        finish();
+    }
 
     @Override
     public void onBackPressed() {

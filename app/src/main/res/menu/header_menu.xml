@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/configure_sop"
+        android:title="Select Guardians"
+        android:icon="@drawable/ic_settings"/>
+    <item android:id="@+id/logout"
+        android:title="Logout"
+        android:icon="@drawable/ic_logout"/>
+    <item android:id="@+id/app_info"
+        android:title="App Info"
+        android:icon="@drawable/ic_info"/>
+</menu>

@@ -1,11 +1,20 @@
 package com.example.uchs;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Layout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -36,12 +45,12 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     private Button lost;
     private ProgressBar reqProgress;
     private TextView progressTxt;
-    private TextView backToSOP;
 
     private String setID;
     private String idType;
     private RequestQueue requestQueue;
-//    private String serverResponse;
+
+    private boolean pollStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +71,82 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         lost = (Button)findViewById(R.id.btLost);
         reqProgress = (ProgressBar)findViewById(R.id.requestProgress);
         progressTxt = (TextView)findViewById(R.id.progressText);
-        backToSOP = (TextView)findViewById(R.id.txtBackToSOP);
 
         raise.setOnClickListener(raiseAlarmListener);
         medical.setOnClickListener(triggerAlarmListener);
         fire.setOnClickListener(triggerAlarmListener);
         lost.setOnClickListener(triggerAlarmListener);
-        backToSOP.setOnClickListener(goToSOPListener);
     }
 
-    private View.OnClickListener goToSOPListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(RaiseAlarmActivity.this,ConfigureSopActivity.class);
-            Bundle dataBundle = new Bundle();
-            dataBundle.putString("CONFIGURE_SOP_TITLE",setID);
-            dataBundle.putString("USER_TYPE",idType);
-            intent.putExtras(dataBundle);
-            startActivity(intent);
+    @SuppressLint("RestrictedApi")
+    public  boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.header_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
         }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.logout:
+                logoutdialogue();
+                break;
+            case  R.id.configure_sop:
+                configuresopnav();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void logoutdialogue(){
+        AlertDialog.Builder logdial = new AlertDialog.Builder(RaiseAlarmActivity.this);
+        logdial.setMessage("Are you sure you want to logout ?").setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logoutmethod();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog logalert = logdial.create();
+        logalert.setTitle("Logout");
+        logalert.show();
+    }
+
+    private void logoutmethod() {
+        Intent logoutIntent = new Intent(RaiseAlarmActivity.this,MainActivity.class);
+        Intent serviceStopIntent = new Intent(RaiseAlarmActivity.this,PollAlert.class);
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        pollStatus = false;
+        stopService(serviceStopIntent);
+        logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(logoutIntent);
+        finish();
+    }
+
+
+    public void configuresopnav() {
+        Intent intent = new Intent(RaiseAlarmActivity.this,ConfigureSopActivity.class);
+        Bundle dataBundle = new Bundle();
+        dataBundle.putString("CONFIGURE_SOP_TITLE",setID);
+        dataBundle.putString("USER_TYPE",idType);
+        intent.putExtras(dataBundle);
+        startActivity(intent);
     };
 
     @Override
@@ -93,7 +159,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             fire.setVisibility(View.INVISIBLE);
             lost.setVisibility(View.INVISIBLE);
             raise.setVisibility(View.VISIBLE);
-            backToSOP.setVisibility(View.VISIBLE);
         } else {
 //            super.onBackPressed();
             moveTaskToBack(true);
@@ -105,7 +170,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             raise.setVisibility(View.INVISIBLE);
-            backToSOP.setVisibility(View.INVISIBLE);
             raiseLabel.setVisibility(View.VISIBLE);
             medical.setVisibility(View.VISIBLE);
             fire.setVisibility(View.VISIBLE);
@@ -212,4 +276,9 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        pollStatus=true;
+        super.onDestroy();
+    }
 }

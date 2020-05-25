@@ -11,18 +11,16 @@
         android:id="@+id/txtRaiseAlarm"
         android:layout_width="286dp"
         android:layout_height="56dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="72dp"
         android:text="Raise Alarm"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/btRaiseAlarm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.38" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/requestProgress"
@@ -40,21 +38,23 @@
         android:id="@+id/progressText"
         android:layout_width="233dp"
         android:layout_height="51dp"
+        android:layout_marginTop="10dp"
         android:text="TextView"
         android:textAlignment="textEnd"
         android:textSize="24sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/requestProgress"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.934" />
+        app:layout_constraintTop_toBottomOf="@+id/LostFound"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/btRaiseAlarm"
         android:layout_width="201dp"
         android:layout_height="194dp"
+        android:layout_marginTop="40dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@android:color/white"
         android:scaleType="fitCenter"
@@ -62,8 +62,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.528"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintTop_toBottomOf="@+id/txtRaiseAlarm"
+        app:layout_constraintVertical_bias="0.426"
         app:srcCompat="@drawable/ic_alarm_button"
         tools:ignore="MissingConstraints" />
 

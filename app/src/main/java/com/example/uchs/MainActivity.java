@@ -1,11 +1,17 @@
 package com.example.uchs;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setActionBar();
 
         SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",MODE_PRIVATE);
         String accID = sharedPreferences.getString("ACC_ID","");
@@ -61,6 +68,29 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(regListener);
         login.setOnClickListener(loginListener);
 
+    }
+
+    public void setActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    public  boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.header_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        MenuItem item = menu.findItem(R.id.configure_sop);
+        item.setVisible(false);
+        MenuItem item1 = menu.findItem(R.id.logout);
+        item1.setVisible(false);
+
+        return true;
     }
 
     private View.OnClickListener regListener = new View.OnClickListener() {

@@ -7,72 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".RaiseAlarmActivity">
 
-    <Button
-        android:id="@+id/btRaiseAlarm"
-        android:layout_width="156sp"
-        android:layout_height="107sp"
-        android:text="Raise Alarm"
-        android:textSize="18sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/txtRaiseAlarm"
         android:layout_width="286dp"
         android:layout_height="56dp"
+        android:layout_marginTop="20dp"
         android:text="Raise Alarm"
         android:textAlignment="center"
         android:textSize="30sp"
-        android:visibility="invisible"
+        android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btRaiseAlarm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.434"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232" />
-
-    <Button
-        android:id="@+id/btMedical"
-        android:layout_width="191sp"
-        android:layout_height="87sp"
-        android:text="Medical"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/btRaiseAlarm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtRaiseAlarm"
-        app:layout_constraintVertical_bias="0.609" />
-
-    <Button
-        android:id="@+id/btFire"
-        android:layout_width="191sp"
-        android:layout_height="87sp"
-        android:text="Fire"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/btLost"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtRaiseAlarm"
-        app:layout_constraintVertical_bias="0.79" />
-
-    <Button
-        android:id="@+id/btLost"
-        android:layout_width="191sp"
-        android:layout_height="87sp"
-        android:layout_marginBottom="152dp"
-        android:text="LostFound"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btRaiseAlarm"
-        app:layout_constraintVertical_bias="0.616" />
+        app:layout_constraintVertical_bias="0.38" />
 
     <ProgressBar
         android:id="@+id/requestProgress"
@@ -80,12 +30,11 @@
         android:layout_width="103dp"
         android:layout_height="65dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/progressText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.935" />
+        app:layout_constraintTop_toBottomOf="@+id/Medical"
+        app:layout_constraintVertical_bias="0.459" />
 
     <TextView
         android:id="@+id/progressText"
@@ -97,9 +46,71 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/requestProgress"
-        app:layout_constraintHorizontal_bias="0.382"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.926" />
+        app:layout_constraintVertical_bias="0.934" />
+
+    <ImageButton
+        android:id="@+id/btRaiseAlarm"
+        android:layout_width="201dp"
+        android:layout_height="194dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@android:color/white"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.528"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.48"
+        app:srcCompat="@drawable/ic_alarm_button"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/Medical"
+        android:layout_width="423dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="40dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@android:color/white"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRaiseAlarm"
+        app:srcCompat="@drawable/ic_medical" />
+
+    <ImageButton
+        android:id="@+id/Fire"
+        android:layout_width="423dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@android:color/white"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Medical"
+        app:srcCompat="@drawable/ic_fire" />
+
+    <ImageButton
+        android:id="@+id/LostFound"
+        android:layout_width="423dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@android:color/white"
+        android:scaleType="fitCenter"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Fire"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_lost" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

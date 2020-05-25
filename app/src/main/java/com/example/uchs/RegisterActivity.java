@@ -1,8 +1,11 @@
 package com.example.uchs;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +16,9 @@ import android.text.InputType;
 import android.text.NoCopySpan;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -58,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        setActionBar();
 
         spinner_prof = (Spinner) findViewById(R.id.edit_Profession);
         adapter_prof = ArrayAdapter.createFromResource(this, R.array.professions, android.R.layout.simple_spinner_item);
@@ -120,6 +127,29 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setTitle("UCHSRegister");
+    }
+
+    public void setActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    public  boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.header_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        MenuItem item = menu.findItem(R.id.configure_sop);
+        item.setVisible(false);
+        MenuItem item1 = menu.findItem(R.id.logout);
+        item1.setVisible(false);
+
+        return true;
     }
 
     private AdapterView.OnItemSelectedListener getProfServCat = new AdapterView.OnItemSelectedListener() {

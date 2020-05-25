@@ -1,6 +1,7 @@
 package com.example.uchs;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,11 +40,11 @@ import org.json.JSONObject;
 public class RaiseAlarmActivity extends AppCompatActivity {
 
     private ConstraintLayout layout;
-    private Button raise;
+    private ImageButton raise;
     private TextView raiseLabel;
-    private Button medical;
-    private Button fire;
-    private Button lost;
+    private ImageButton medical;
+    private ImageButton fire;
+    private ImageButton lost;
     private ProgressBar reqProgress;
     private TextView progressTxt;
 
@@ -56,6 +58,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raise_alarm);
+        setActionBar();
 
         setID = getIntent().getStringExtra("RAISE_ALARM_ID");
         idType = getIntent().getStringExtra("ID_TYPE");
@@ -64,11 +67,11 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         layout = (ConstraintLayout) findViewById(R.id.raiseAlarmLayout);
-        raise = (Button)findViewById(R.id.btRaiseAlarm);
+        raise = (ImageButton)findViewById(R.id.btRaiseAlarm);
         raiseLabel = (TextView)findViewById(R.id.txtRaiseAlarm);
-        medical = (Button)findViewById(R.id.btMedical);
-        fire = (Button)findViewById(R.id.btFire);
-        lost = (Button)findViewById(R.id.btLost);
+        medical = (ImageButton) findViewById(R.id.Medical);
+        fire = (ImageButton) findViewById(R.id.Fire);
+        lost = (ImageButton) findViewById(R.id.LostFound);
         reqProgress = (ProgressBar)findViewById(R.id.requestProgress);
         progressTxt = (TextView)findViewById(R.id.progressText);
 
@@ -76,6 +79,13 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         medical.setOnClickListener(triggerAlarmListener);
         fire.setOnClickListener(triggerAlarmListener);
         lost.setOnClickListener(triggerAlarmListener);
+    }
+
+    public void setActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -154,7 +164,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 
         if (raise.getVisibility() == View.INVISIBLE && raiseLabel.getVisibility() == View.VISIBLE) {
 
-            raiseLabel.setVisibility(View.INVISIBLE);
             medical.setVisibility(View.INVISIBLE);
             fire.setVisibility(View.INVISIBLE);
             lost.setVisibility(View.INVISIBLE);
@@ -260,15 +269,15 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     private View.OnClickListener triggerAlarmListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Button tempBt = (Button)findViewById(v.getId());
-//            System.out.println(tempBt.getText().toString());
+            ImageButton tempBt = (ImageButton) findViewById(v.getId());
             buttonStatus(false);
 
             Location triggerLocation = new Location(); // TODO Location API call {Async Thread}
             Location alarmLocation = triggerLocation.fetchLocation();
             String strAlarmLocation = "Lat: " + String.valueOf(alarmLocation.latitude) + " Long: " + String.valueOf(alarmLocation.longitude);
             String userID = setID;
-            String alarmType = tempBt.getText().toString();
+            String[] arrstr = v.getResources().getResourceName(v.getId()).split("/",2);
+            String alarmType = arrstr[arrstr.length-1];
             Alarm alarm = new Alarm(userID, alarmType, alarmLocation);
             // TODO Send alarm to Server Endpoint {NEED async task extension of Alarm class}
             sendAlarmToServer(alarm);

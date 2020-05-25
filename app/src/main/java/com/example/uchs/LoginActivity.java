@@ -1,7 +1,10 @@
 package com.example.uchs;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +12,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setActionBar();
 
         getSupportActionBar().setTitle("UCHSLogin");
 
@@ -66,6 +73,28 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void setActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    public  boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.header_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        MenuItem item = menu.findItem(R.id.configure_sop);
+        item.setVisible(false);
+        MenuItem item1 = menu.findItem(R.id.logout);
+        item1.setVisible(false);
+
+        return true;
+    }
 
     private AdapterView.OnItemSelectedListener userCategorySelector = new AdapterView.OnItemSelectedListener() {
         @Override

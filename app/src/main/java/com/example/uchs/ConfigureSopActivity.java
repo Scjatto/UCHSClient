@@ -1,6 +1,7 @@
 package com.example.uchs;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 
@@ -32,6 +33,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_sop);
+        setActionBar();
 
         Intent getIntent = getIntent();
         Bundle dataExtras = getIntent.getExtras();
@@ -56,6 +58,13 @@ public class ConfigureSopActivity extends AppCompatActivity {
 
         if (titleType.equals("help")) {
             gotToRaiseAlarm.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
         }
     }
 

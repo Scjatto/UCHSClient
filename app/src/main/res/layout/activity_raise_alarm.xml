@@ -67,7 +67,7 @@
         tools:ignore="MissingConstraints" />
 
     <ImageButton
-        android:id="@+id/Medical"
+        android:id="@+id/Fire"
         android:layout_width="423dp"
         android:layout_height="128dp"
         android:layout_marginTop="40dp"
@@ -78,10 +78,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtRaiseAlarm"
-        app:srcCompat="@drawable/ic_medical" />
+        app:srcCompat="@drawable/ic_fire" />
 
     <ImageButton
-        android:id="@+id/Fire"
+        android:id="@+id/Medical"
         android:layout_width="423dp"
         android:layout_height="128dp"
         android:layout_marginTop="20dp"
@@ -92,8 +92,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Medical"
-        app:srcCompat="@drawable/ic_fire" />
+        app:layout_constraintTop_toBottomOf="@+id/Fire"
+        app:srcCompat="@drawable/ic_medical" />
 
     <ImageButton
         android:id="@+id/LostFound"
@@ -108,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Fire"
+        app:layout_constraintTop_toBottomOf="@+id/Medical"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_lost" />
 

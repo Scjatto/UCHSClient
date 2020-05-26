@@ -58,7 +58,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raise_alarm);
-        setActionBar();
 
         setID = getIntent().getStringExtra("RAISE_ALARM_ID");
         idType = getIntent().getStringExtra("ID_TYPE");
@@ -81,12 +80,6 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         lost.setOnClickListener(triggerAlarmListener);
     }
 
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
-    }
 
     @SuppressLint("RestrictedApi")
     public  boolean onCreateOptionsMenu(Menu menu){

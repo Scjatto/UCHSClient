@@ -33,7 +33,6 @@ public class ConfigureSopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_sop);
-        setActionBar();
 
         Intent getIntent = getIntent();
         Bundle dataExtras = getIntent.getExtras();
@@ -61,12 +60,6 @@ public class ConfigureSopActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
-    }
 
     @SuppressLint("RestrictedApi")
     public  boolean onCreateOptionsMenu(Menu menu){

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">UCHS</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
     <string-array name="professions">
         <item>Fire</item>
         <item>LostFound</item>

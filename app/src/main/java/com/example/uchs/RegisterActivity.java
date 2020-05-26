@@ -64,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        setActionBar();
 
         spinner_prof = (Spinner) findViewById(R.id.edit_Profession);
         adapter_prof = ArrayAdapter.createFromResource(this, R.array.professions, android.R.layout.simple_spinner_item);
@@ -127,13 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setTitle("UCHSRegister");
-    }
-
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
     }
 
     @SuppressLint("RestrictedApi")

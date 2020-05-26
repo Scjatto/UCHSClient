@@ -22,7 +22,6 @@ public class AlarmStatusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_status);
-        setActionBar();
 
         getSupportActionBar().setTitle("Community");
         Intent alarmStatusIntent = getIntent();
@@ -49,12 +48,5 @@ public class AlarmStatusActivity extends AppCompatActivity {
         item1.setVisible(false);
 
         return true;
-    }
-
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
     }
 }

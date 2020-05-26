@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setActionBar();
 
         SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",MODE_PRIVATE);
         String accID = sharedPreferences.getString("ACC_ID","");
@@ -68,13 +67,6 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(regListener);
         login.setOnClickListener(loginListener);
 
-    }
-
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
     }
 
     @SuppressLint("RestrictedApi")

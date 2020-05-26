@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setActionBar();
 
         getSupportActionBar().setTitle("UCHSLogin");
 
@@ -71,13 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         spinner_login_cat.setAdapter(adapter_login_cat);
         spinner_login_cat.setOnItemSelectedListener(userCategorySelector);
 
-    }
-
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
     }
 
     @SuppressLint("RestrictedApi")

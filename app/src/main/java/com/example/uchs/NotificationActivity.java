@@ -18,16 +18,9 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-        setActionBar();
         onNewIntent(getIntent());
     }
 
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_bg));
-        }
-    }
 
     @SuppressLint("RestrictedApi")
     public  boolean onCreateOptionsMenu(Menu menu){

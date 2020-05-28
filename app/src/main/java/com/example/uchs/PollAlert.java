@@ -136,8 +136,8 @@ public class PollAlert extends IntentService {
                 } else {
                     msg = "Server Not Responding!!";
                 }
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                Log.d(DEBUG_TAG, " Server Not Responding:: " + error.getMessage());
+//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                Log.d(DEBUG_TAG, msg + ": " + error.getMessage());
             }
         });
 

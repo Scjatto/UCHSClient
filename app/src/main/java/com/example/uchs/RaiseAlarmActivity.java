@@ -217,6 +217,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
 //                            System.out.println(data);
                                 String serverResponse = data.getString("ACK");
                                 serverResponse = serverResponse.replace(strLocation, alarmLocation.getLocationName(strLocation));
+                                serverResponse += "\nAlarmID=" + data.getString("ID");
 //                                serverResponse = serverResponse.replace(alarmTimeStamp , alarm.humanReadableTimeStamp(alarmTimeStamp));
 //                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));
                                 Intent alarmIntent = new Intent(RaiseAlarmActivity.this, AlarmStatusActivity.class);

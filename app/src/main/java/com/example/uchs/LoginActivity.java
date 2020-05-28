@@ -174,8 +174,10 @@ public class LoginActivity extends AppCompatActivity {
                 finLogin.setEnabled(true);
                 spinner_login_cat.setEnabled(true);
                 String msg;
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    msg = "Request Timed Out!! Check your internet connection and try again";
+                if (error instanceof TimeoutError) {
+                    msg = "Request Timed Out!! Please try again!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
                 } else {
                     long timeEpoch = System.currentTimeMillis();
                     String time = DateFormat.format("dd/MM/yyyy HH:mm:ss" , timeEpoch).toString();

@@ -241,8 +241,10 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                         progressTxt.setVisibility(View.GONE);
                         buttonStatus(true);
                         String msg;
-                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                            msg = "Request Timed Out!! Check your internet connection and try again";
+                        if (error instanceof TimeoutError) {
+                            msg = "Request Timed Out!! Please try again!!";
+                        } else if (error instanceof NoConnectionError) {
+                            msg = "No internet detected!! Please check the internet connection";
                         } else {
                             msg = "Server Not Responding!!";
                         }

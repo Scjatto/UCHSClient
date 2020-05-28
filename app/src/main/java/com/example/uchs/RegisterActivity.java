@@ -197,8 +197,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 String msg;
                 enableStatus(true);
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    msg = "Request Timed Out!! Check your internet connection and try again";
+                if (error instanceof TimeoutError) {
+                    msg = "Request Timed Out!! Please try again!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
                 } else {
                     msg = "Server Not Responding!!";
                 }
@@ -249,8 +251,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 String msg;
                 enableStatus(true);
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    msg = "Request Timed Out!! Check your internet connection and try again";
+                if (error instanceof TimeoutError) {
+                    msg = "Request Timed Out!! Please try again!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
                 } else {
                     msg = "Server Not Responding!!";
                 }

@@ -40,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
         String accType = sharedPreferences.getString("ACC_TYPE","");
 
         if(!accID.equals("") && !accPass.equals("") && !accType.equals("")) {
+
+            Intent serviceIntent = new Intent(MainActivity.this, PollAlert.class);
+            Bundle serviceBundle = new Bundle();
+            serviceBundle.putString("AccountID", accID);
+            serviceBundle.putString("IDType", accType);
+            startService(serviceIntent);
+
             if (accType.equals("user")) {
                 Intent intent = new Intent(this, RaiseAlarmActivity.class);
                 Bundle dataBundle = new Bundle();

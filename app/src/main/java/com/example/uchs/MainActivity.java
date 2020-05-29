@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle serviceBundle = new Bundle();
             serviceBundle.putString("AccountID", accID);
             serviceBundle.putString("IDType", accType);
+            serviceIntent.putExtras(serviceBundle);
             startService(serviceIntent);
 
             if (accType.equals("user")) {

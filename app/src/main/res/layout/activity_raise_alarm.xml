@@ -52,8 +52,8 @@
 
     <ImageButton
         android:id="@+id/btRaiseAlarm"
-        android:layout_width="201dp"
-        android:layout_height="194dp"
+        android:layout_width="200dp"
+        android:layout_height="190dp"
         android:layout_marginTop="40dp"
         android:adjustViewBounds="true"
         android:background="@null"
@@ -68,8 +68,8 @@
 
     <ImageButton
         android:id="@+id/Fire"
-        android:layout_width="423dp"
-        android:layout_height="128dp"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_marginTop="40dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
@@ -82,8 +82,8 @@
 
     <ImageButton
         android:id="@+id/Medical"
-        android:layout_width="423dp"
-        android:layout_height="128dp"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
@@ -97,8 +97,8 @@
 
     <ImageButton
         android:id="@+id/LostFound"
-        android:layout_width="423dp"
-        android:layout_height="128dp"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"

@@ -25,8 +25,12 @@ public class Alert {
     }
 
     private String getLocationString(double lat, double lon) {
-        String loc = "Locatable Location";
-        return loc;
+        Location location = new Location();
+        String locName = location.getLocationName(lat, lon);
+        if (locName != null) {
+            return locName;
+        }
+        return "UnIdentified Location";
     }
 
     public String genAlertMsg(){

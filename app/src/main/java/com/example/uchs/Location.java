@@ -82,9 +82,17 @@ public class Location {
         return pool[randIdx];
     }
 
-    public String getLocationName(String location) {
-
-        String locationName = "Locatable Location";
-        return locationName;
+    public String getLocationName(double lat, double lon) {
+        Location fetchLoc = new Location();
+        Location[] pool = fetchLoc.initLocationPool();
+        for (Location poolElem : pool) {
+            Log.d("LOCATION", String.valueOf(lat) + "&&" + String.valueOf(poolElem.latitude));
+            Log.d("LOCATION", String.valueOf(lon) + "&&" + String.valueOf(poolElem.longitude));
+            if (poolElem.latitude == lat && poolElem.longitude == lon) {
+                return poolElem.locName;
+            }
+        }
+        return null;
     }
+
 }

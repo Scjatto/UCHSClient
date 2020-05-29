@@ -216,7 +216,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
                                 JSONObject data = response.getJSONObject("data");
 //                            System.out.println(data);
                                 String serverResponse = data.getString("ACK");
-                                serverResponse = serverResponse.replace(strLocation, alarmLocation.getLocationName(strLocation));
+                                serverResponse = serverResponse.replace(strLocation, alarmLocation.locName);
                                 serverResponse += "\nAlarmID=" + data.getString("ID");
 //                                serverResponse = serverResponse.replace(alarmTimeStamp , alarm.humanReadableTimeStamp(alarmTimeStamp));
 //                            System.out.println(serverResponse.replace(alarmType, alarm.alarmType));

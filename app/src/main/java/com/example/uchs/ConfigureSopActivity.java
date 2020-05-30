@@ -13,12 +13,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ConfigureSopActivity extends AppCompatActivity {
 
@@ -91,13 +107,65 @@ public class ConfigureSopActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void logoutFetchApi(RequestQueue requestQueue) {
+        String url = "https://tribal-marker-274610.el.r.appspot.com/logout?";
+        url += "type=" + titleType;
+        url += "&id=" + setTitle;
+        Log.d("ConfigureSopLogout",url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            int status = response.getInt("status");
+                            if (status == 1) {
+                                int check = response.getInt("check");
+                                if (check == 1) {
+                                    String msg = response.getString("desc");
+                                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                    logoutmethod();
+                                } else {
+                                    String msg = response.getString("desc");
+                                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                String msg = "Server Error!! Could not logout";
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg;
+                if (error instanceof TimeoutError) {
+                    msg = "Request Timed Out!! Please try again!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        int socketTimeOut = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
     public void logoutdialogue(){
         AlertDialog.Builder logdial = new AlertDialog.Builder(ConfigureSopActivity.this);
         logdial.setMessage("Are you sure you want to logout ?").setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        logoutmethod();
+                        RequestQueue newRequestQueue = Volley.newRequestQueue(ConfigureSopActivity.this);
+                        logoutFetchApi(newRequestQueue);
+//                        logoutmethod();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

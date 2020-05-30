@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -112,13 +113,66 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void logoutFetchApi(RequestQueue requestQueue) {
+        String url = "https://tribal-marker-274610.el.r.appspot.com/logout?";
+        url += "type=" + idType;
+        url += "&id=" + setID;
+        Log.d("RaiseAlarmLogout",url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            int status = response.getInt("status");
+                            if (status == 1) {
+                                int check = response.getInt("check");
+                                if (check == 1) {
+                                    String msg = response.getString("desc");
+                                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                    logoutmethod();
+                                } else {
+                                    String msg = response.getString("desc");
+                                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                String msg = "Server Error!! Could not logout";
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg;
+                if (error instanceof TimeoutError) {
+                    msg = "Request Timed Out!! Please try again!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        int socketTimeOut = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
     public void logoutdialogue(){
         AlertDialog.Builder logdial = new AlertDialog.Builder(RaiseAlarmActivity.this);
         logdial.setMessage("Are you sure you want to logout ?").setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        logoutmethod();
+                        RequestQueue newRequestQueue = Volley.newRequestQueue(RaiseAlarmActivity.this);
+                        logoutFetchApi(newRequestQueue);
+//                        logoutmethod();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

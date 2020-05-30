@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(finLoginIntent);
                                     finish();
                                 } else {
-                                    String msg = "Invalid Credentials!! Please Check Again";
+                                    String msg = response.getString("desc");
                                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
                                 }
                             } else {

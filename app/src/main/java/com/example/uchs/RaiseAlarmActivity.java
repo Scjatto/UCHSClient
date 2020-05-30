@@ -62,6 +62,7 @@ public class RaiseAlarmActivity extends AppCompatActivity {
         setID = getIntent().getStringExtra("RAISE_ALARM_ID");
         idType = getIntent().getStringExtra("ID_TYPE");
         getSupportActionBar().setTitle(setID);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         requestQueue = Volley.newRequestQueue(this);
 

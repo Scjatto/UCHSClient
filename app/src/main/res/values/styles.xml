@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionOverflowButtonStyle">@style/Overflow</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_logo_round</item>
     </style>
 
     <style name="Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">

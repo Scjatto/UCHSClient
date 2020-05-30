@@ -40,6 +40,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
         titleType = dataExtras.getString("USER_TYPE");
 
         getSupportActionBar().setTitle(setTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(!pollStatus) {
             Intent intent = new Intent(ConfigureSopActivity.this,PollAlert.class);

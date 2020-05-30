@@ -24,6 +24,7 @@ public class AlarmStatusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_status);
 
         getSupportActionBar().setTitle("Community");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent alarmStatusIntent = getIntent();
         Bundle alarmStatusBundle = alarmStatusIntent.getExtras();
         String alarmMessage = alarmStatusBundle.getString("ACK");

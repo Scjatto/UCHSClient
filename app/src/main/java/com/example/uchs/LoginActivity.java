@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        getSupportActionBar().setTitle("UCHSLogin");
+        getSupportActionBar().setTitle("Login");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         idphone = (EditText)findViewById(R.id.editIdPhone);
         password = (EditText)findViewById(R.id.editPassword);

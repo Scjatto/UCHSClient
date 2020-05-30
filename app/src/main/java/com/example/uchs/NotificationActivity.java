@@ -1,5 +1,6 @@
 package com.example.uchs;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -48,5 +49,17 @@ public class NotificationActivity extends AppCompatActivity {
         System.out.println("Message : "+msg);
         TextView tvNotify = findViewById(R.id.notification_view) ;
         tvNotify.setText(msg) ;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.app_info:
+                Intent intent = new Intent(NotificationActivity.this, AppinfoActivity.class);
+                startActivity(intent);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

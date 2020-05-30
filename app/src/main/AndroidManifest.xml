@@ -11,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NotificationActivity"
-            android:launchMode="singleTop"
-            android:excludeFromRecents="true">
-        </activity>
+        <activity android:name=".AppinfoActivity"></activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"></activity>
         <activity android:name=".AlarmStatusActivity" />
         <activity android:name=".ConfigureSopActivity" />
         <activity android:name=".RaiseAlarmActivity" />

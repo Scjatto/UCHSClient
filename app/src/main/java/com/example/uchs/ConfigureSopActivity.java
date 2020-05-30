@@ -82,6 +82,9 @@ public class ConfigureSopActivity extends AppCompatActivity {
             case R.id.logout:
                 logoutdialogue();
                 break;
+            case R.id.app_info:
+                Intent intent = new Intent(ConfigureSopActivity.this, AppinfoActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

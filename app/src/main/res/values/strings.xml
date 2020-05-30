@@ -2,6 +2,11 @@
     <string name="app_name">UCHS</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="appinfotext">The UCHS (Universal Community Helpline Service) App lets your near
+        ones know when you need them the most in an emergency situation. This App lets you pre set
+        your guardians to whom an alert would be sent when you are in an emergency situation. This
+        App also informs the community residing nearby your location about your emergency just by a
+        button click. It also adheres Government Emergency Services in case needed.</string>
     <string-array name="professions">
         <item>Fire</item>
         <item>LostFound</item>

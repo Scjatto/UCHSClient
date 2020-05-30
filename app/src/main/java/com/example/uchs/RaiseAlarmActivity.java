@@ -103,6 +103,9 @@ public class RaiseAlarmActivity extends AppCompatActivity {
             case  R.id.configure_sop:
                 configuresopnav();
                 break;
+            case R.id.app_info:
+                Intent intent = new Intent(RaiseAlarmActivity.this, AppinfoActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -1,11 +1,13 @@
 package com.example.uchs;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,13 +106,14 @@ public class PollAlert extends IntentService {
 
                                         Alert alert = new Alert(alarmType, alarmLat, alarmLon, alarmTS, alarmUser);
                                         String onNotifMsg = alert.genAlertMsg();
+                                        String expanded_msg = alert.genExpandedMsg();
                                         String detailedMsg = alert.genDetailedMsg();
                                         Log.d(DEBUG_TAG, onNotifMsg);
                                         Log.d(DEBUG_TAG, detailedMsg);
                                         createNotificationChannel();
                                         notificationManager = NotificationManagerCompat.from(PollAlert.this);
                                         int not_id = (int) System.currentTimeMillis();
-                                        sendNotification(not_id, onNotifMsg, detailedMsg);
+                                        sendNotification(not_id, onNotifMsg, expanded_msg, detailedMsg);
                                         Log.d(DEBUG_TAG, "Notification sent");
                                     }
                                 } else {
@@ -193,8 +196,8 @@ public class PollAlert extends IntentService {
         }
     }
 
-    public void sendNotification(int not_id, String onNotifmsg, String detailedMessage) {
-        String title = "Alert";
+    public void sendNotification(int not_id, String onNotifmsg, String expanded_msg, String detailedMessage) {
+        String title = "Emergency Alert";
 
         Intent intent_not = new Intent(this, NotificationActivity.class);
         intent_not.putExtra("message", detailedMessage);
@@ -204,12 +207,15 @@ public class PollAlert extends IntentService {
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add_alert)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_round_org_size))
                 .setContentTitle(title)
                 .setContentText(onNotifmsg)
+                .setColor(getResources().getColor(R.color.red))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(expanded_msg))
                 .build();
         notificationManager.notify(not_id, notification);
     }

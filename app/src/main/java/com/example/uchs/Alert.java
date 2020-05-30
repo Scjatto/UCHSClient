@@ -37,11 +37,20 @@ public class Alert {
         String msg = "An alarm of type ";
         msg += alertAlarmType;
         msg += " was raised by " + alertAlarmUser;
+
+        return msg;
+    }
+
+    public String genExpandedMsg() {
+        String msg = "An alarm of type ";
+        msg += alertAlarmType;
+        msg += " was raised by " + alertAlarmUser;
         msg += " from " + getLocationString(alertAlarmLat, alertAlarmLong);
         msg += " on " + humanReadableTimeStamp(alertAlarmTS);
 
         return msg;
     }
+
     public String genDetailedMsg() {
         String msg = "Alarm Type: " + alertAlarmType + "\n";
         msg += "Raised By: " + alertAlarmUser + "\n";

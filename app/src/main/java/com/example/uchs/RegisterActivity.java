@@ -102,10 +102,12 @@ public class RegisterActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView prof = (TextView) findViewById(R.id.enter_Profession);
                 TextView ageLoc = (TextView)findViewById(R.id.enterAgeLoc);
+                TextView uHId = (TextView)findViewById(R.id.enter_Username);
                 userCat = parent.getItemAtPosition(position).toString();
                 if (position==0) {
                     prof.setText("Profession");
                     ageLoc.setText("Age");
+                    uHId.setText("UserID");
                     editAgeLoc.setText("");
                     editAgeLoc.setInputType(InputType.TYPE_CLASS_NUMBER);
                     editAgeLoc.setHint("Enter Age");
@@ -114,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 else if(position==1){
                     prof.setText("Service Type");
                     ageLoc.setText("Location");
+                    uHId.setText("HelplineID");
                     editAgeLoc.setInputType(InputType.TYPE_CLASS_TEXT);
                     editAgeLoc.setText("");
                     editAgeLoc.setHint("Enter Location");

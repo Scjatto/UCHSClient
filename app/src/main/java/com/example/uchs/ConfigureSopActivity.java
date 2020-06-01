@@ -11,14 +11,22 @@ import android.app.IntentService;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +41,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ConfigureSopActivity extends AppCompatActivity {
 
+    public static final String TAG = "CONFIG_SOP";
     private Button gotToRaiseAlarm = null;
+
+    private RelativeLayout updateGuardianLayout;
+    private Button addNew;
+    private Button checkUpdate;
+
+    private int guardianViewId = 0;
 
     private String setTitle = null;
     private String titleType = null;
@@ -70,13 +86,297 @@ public class ConfigureSopActivity extends AppCompatActivity {
         }
 
         gotToRaiseAlarm = (Button) findViewById(R.id.button_skip);
+
+        updateGuardianLayout = (RelativeLayout)findViewById(R.id.guardianLayout);
+        addNew = (Button) findViewById(R.id.btInsertGuardian);
+        checkUpdate = (Button)findViewById(R.id.btUpdateGuardians);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(ConfigureSopActivity.this);
+        fetchUserGuardians(requestQueue, setTitle);
+
         gotToRaiseAlarm.setOnClickListener(skipToRaiseAlarm);
+        addNew.setOnClickListener(setGuardian);
+        checkUpdate.setOnClickListener(checkAndUpdateSOP);
 
         if (titleType.equals("help")) {
             gotToRaiseAlarm.setVisibility(View.INVISIBLE);
         }
     }
 
+    private boolean isRedundant() {
+        for (int i = 0; i < updateGuardianLayout.getChildCount(); i++) {
+            View view = updateGuardianLayout.getChildAt(i);
+
+            if (view instanceof EditText) {
+                String tempTxt = ((EditText) view).getText().toString();
+                for (int j = i+1; j < updateGuardianLayout.getChildCount(); j++) {
+                    View tempView = updateGuardianLayout.getChildAt(j);
+                    if (tempView instanceof EditText) {
+                        if (((EditText) tempView).getText().toString().equals(tempTxt) && !tempTxt.equals("")) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void colorCode(String guardianString, String color) {
+        for (int i=0; i<updateGuardianLayout.getChildCount(); i++) {
+            View view = updateGuardianLayout.getChildAt(i);
+
+            if (view instanceof EditText) {
+                if(((EditText) view).getText().toString().equals(guardianString)) {
+                    if (color.equals("red")) {
+                        ((EditText) view).setTextColor(Color.RED);
+                    }
+                    if (color.equals("grey")) {
+                        ((EditText) view).setTextColor(Color.GRAY);
+                    }
+                }
+            }
+        }
+    }
+
+    private void configureUpdatedSop(RequestQueue requestQueue, String guardians) {
+        String url = "https://tribal-marker-274610.el.r.appspot.com/configureSOP?";
+        url += "uid=" + setTitle;
+        url += "&guid_list=" + guardians;
+        url += "&update=yes";
+        Log.d(TAG,"URL: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        checkUpdate.setEnabled(true);
+                        try {
+                            int status = response.getInt("status");
+                            if (status == 1) {
+                                int check = response.getInt("check");
+                                String msg = response.getString("desc");
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                if (check == 1) {
+                                    updateGuardianLayout.removeAllViews();
+                                    RequestQueue newRequestQueue = Volley.newRequestQueue(ConfigureSopActivity.this);
+                                    fetchUserGuardians(newRequestQueue,setTitle);
+                                }
+                            } else {
+                                String msg = "Server Error!! Couldn't check existence of user";
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg;
+                checkUpdate.setEnabled(true);
+                if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        checkUpdate.setEnabled(false);
+        int socketTimeOut = 10000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void checkIfUsersExist(final RequestQueue requestQueue, final String guardianString) {
+        String url = "https://tribal-marker-274610.el.r.appspot.com/clientExists?type=user";
+        url += "&IDlist=" + guardianString;
+        Log.d(TAG,"URL: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        checkUpdate.setEnabled(true);
+                        try {
+                            int status = response.getInt("status");
+                            if(status == 1) {
+                                int check = response.getInt("check");
+                                if (check == 1) {
+                                    // TODO Update and get guardians API Call
+                                    for(int i=0;i<updateGuardianLayout.getChildCount();i++) {
+                                        View view = updateGuardianLayout.getChildAt(i);
+                                        if (view instanceof EditText) {
+                                            ((EditText) view).setTextColor(Color.DKGRAY);
+                                        }
+                                    }
+                                    Log.d(TAG, "Check Successful");
+                                    RequestQueue updateRequestQueue = Volley.newRequestQueue(ConfigureSopActivity.this);
+                                    configureUpdatedSop(updateRequestQueue, guardianString);
+                                } else {
+                                    JSONArray jsonArray = response.getJSONArray("invalid_IDs");
+                                    for (int i=0; i<jsonArray.length(); i++) {
+                                        String tempStr = jsonArray.getString(i);
+                                        colorCode(tempStr,"red");
+                                    }
+                                    JSONArray jsonArrayValid = response.getJSONArray("valid_IDs");
+                                    for (int i=0; i<jsonArrayValid.length(); i++) {
+                                        String tempStr = jsonArrayValid.getString(i);
+                                        colorCode(tempStr, "grey");
+                                    }
+                                }
+                            } else {
+                                String msg = "Server Error!! Couldn't check existence of user";
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg;
+                checkUpdate.setEnabled(true);
+                if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        checkUpdate.setEnabled(false);
+        int socketTimeOut = 5000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 1, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void checkUserExists() {
+        String guardiansToUpdate = "";
+        int condCnt = 0;
+        for (int i = 0; i < updateGuardianLayout.getChildCount(); i++) {
+            View view = updateGuardianLayout.getChildAt(i);
+
+            if(view instanceof EditText) {
+                String tempString = ((EditText) view).getText().toString();
+                if (!tempString.equals("")) {
+                    if (condCnt == 0) {
+                        guardiansToUpdate += tempString;
+                    } else {
+                        guardiansToUpdate += "," + tempString;
+                    }
+                    condCnt++;
+                }
+            }
+        }
+        Log.d(TAG,"Guardians To Update: " + guardiansToUpdate);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        checkIfUsersExist(requestQueue, guardiansToUpdate);
+    }
+
+    private View.OnClickListener checkAndUpdateSOP = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!isRedundant()) {
+                checkUserExists();
+            } else {
+                String msg = "Redundant fields present, please check again";
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+
+    private void fetchUserGuardians(final RequestQueue requestQueue, final String userID) {
+        String url = "https://tribal-marker-274610.el.r.appspot.com/getGuardians?";
+        url += "uid=" + userID;
+        Log.d(TAG,"URL: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String msg = "";
+                            int status = response.getInt("status");
+                            if (status == 1) {
+                                int guardianNumber = response.getInt("#guardians");
+                                guardianViewId = guardianNumber;
+                                if (guardianNumber != 0) {
+                                    JSONArray guardianList = response.getJSONArray("guardians");
+                                    for (int i=0; i<guardianNumber; i++) {
+                                        String guardianElement = guardianList.getString(i);
+                                        createGuardianSection(updateGuardianLayout, guardianElement, i + 1);
+                                    }
+                                } else {
+                                    msg = "No guardian for user " + userID + " has been configured";
+                                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                msg = "Server Error!! Guardians could not be fetched";
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg;
+                if (error instanceof NoConnectionError) {
+                    msg = "No internet detected!! Please check the internet connection";
+                } else {
+                    msg = "Server Not Responding!!";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        int socketTimeOut = 10000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 2, 1);
+        jsonObjectRequest.setRetryPolicy(policy);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+    private View.OnClickListener setGuardian = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (guardianViewId < 15) {
+                createGuardianSection(updateGuardianLayout, "", ++ guardianViewId);
+            } else {
+                String msg = "Max limit of 15 guardians reached";
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    };
+
+    private void createGuardianSection(RelativeLayout layout, String content, int viewId) {
+        createTextView(layout, content, viewId);
+    }
+
+    private void createTextView(RelativeLayout layout, String txtContent, int txtId) {
+        EditText editText = new EditText(this);
+        editText.setTextSize(18);
+        editText.setId(txtId);
+        editText.setHint("Enter guardian");
+        editText.setText(txtContent);
+        Log.d(TAG,"TXT_ID: " + String.valueOf(txtId));
+
+        RelativeLayout.LayoutParams editViewParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        editText.setLayoutParams(editViewParams);
+        if (txtId > 1) {
+            editViewParams.addRule(RelativeLayout.BELOW, txtId - 1);
+        }
+        editViewParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+        layout.addView(editText);
+    }
 
     @SuppressLint("RestrictedApi")
     public  boolean onCreateOptionsMenu(Menu menu){

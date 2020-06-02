@@ -162,7 +162,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
                                     fetchUserGuardians(newRequestQueue,setTitle);
                                 }
                             } else {
-                                String msg = "Server Error!! Couldn't check existence of user";
+                                String msg = "Server Error!! Couldn't update SOP";
                                 Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {

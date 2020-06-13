@@ -359,14 +359,16 @@ public class ConfigureSopActivity extends AppCompatActivity {
 
     private void createTextView(RelativeLayout layout, String txtContent, int txtId) {
         EditText editText = new EditText(this);
-        editText.setTextSize(18);
+        editText.setTextSize(22);
         editText.setId(txtId);
         editText.setHint("Enter guardian");
         editText.setText(txtContent);
+        editText.setBackgroundResource(R.drawable.edit_text_border);
+        editText.setPadding(25,10,25,5);
         Log.d(TAG,"TXT_ID: " + String.valueOf(txtId));
 
         RelativeLayout.LayoutParams editViewParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
         editText.setLayoutParams(editViewParams);
@@ -374,7 +376,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             editViewParams.addRule(RelativeLayout.BELOW, txtId - 1);
         }
         editViewParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
+        editViewParams.setMargins(0,15,0, 15);
         layout.addView(editText);
     }
 

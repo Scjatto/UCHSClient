@@ -303,6 +303,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
 
+        @SuppressLint("ResourceAsColor")
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if(fillCheck() && editPhone.getText().toString().length() == 10) {

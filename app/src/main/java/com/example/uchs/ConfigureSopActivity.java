@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +54,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
     private Button gotToRaiseAlarm = null;
 
     private RelativeLayout updateGuardianLayout;
-    private Button addNew;
+    private FloatingActionButton addNew;
     private Button checkUpdate;
 
     private int guardianViewId = 0;
@@ -88,7 +91,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
         gotToRaiseAlarm = (Button) findViewById(R.id.button_skip);
 
         updateGuardianLayout = (RelativeLayout)findViewById(R.id.guardianLayout);
-        addNew = (Button) findViewById(R.id.btInsertGuardian);
+        addNew = (FloatingActionButton) findViewById(R.id.btInsertGuardian);
         checkUpdate = (Button)findViewById(R.id.btUpdateGuardians);
 
         RequestQueue requestQueue = Volley.newRequestQueue(ConfigureSopActivity.this);
@@ -355,8 +358,27 @@ public class ConfigureSopActivity extends AppCompatActivity {
 
     private void createGuardianSection(RelativeLayout layout, String content, int viewId) {
         createTextView(layout, content, viewId);
+        //createRemovebutton(layout, viewId+20);
     }
 
+
+
+    private void createRemovebutton(RelativeLayout layout, int btid){
+        ImageButton imgbtn = new ImageButton(this);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        imgbtn.setImageResource(R.drawable.ic_delete_red);
+        imgbtn.setId(btid);
+        imgbtn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imgbtn.setLayoutParams(lp);
+        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        lp.addRule(RelativeLayout.RIGHT_OF, btid - 20);
+        if(btid > 21){
+            lp.addRule(RelativeLayout.BELOW, btid-1);
+        }
+        System.out.println(btid);
+        lp.setMargins(0,10,0 ,10);
+        layout.addView(imgbtn);
+    }
     private void createTextView(RelativeLayout layout, String txtContent, int txtId) {
         EditText editText = new EditText(this);
         editText.setTextSize(22);
@@ -364,7 +386,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
         editText.setHint("Enter guardian");
         editText.setText(txtContent);
         editText.setBackgroundResource(R.drawable.edit_text_border);
-        editText.setPadding(25,10,25,5);
+        editText.setPadding(25,10,25,10);
         Log.d(TAG,"TXT_ID: " + String.valueOf(txtId));
 
         RelativeLayout.LayoutParams editViewParams = new RelativeLayout.LayoutParams(

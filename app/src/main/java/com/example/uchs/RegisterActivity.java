@@ -282,7 +282,7 @@ public class RegisterActivity extends AppCompatActivity {
             View view = layout.getChildAt(i);
 
             if (view instanceof EditText) {
-                if (((EditText) view).getText().toString().isEmpty()) {
+                if (((EditText) view).getText().toString().trim().isEmpty()) {
                     return false;
                 }
             }
@@ -319,29 +319,33 @@ public class RegisterActivity extends AppCompatActivity {
         }
     };
 
-
+    // Issue fixed: #6 AVASS141
     private View.OnClickListener registerSubmitListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String uCat = userCat;
             String servProf = profServType;
-            String uName = editName.getText().toString();
-            String uPh = editPhone.getText().toString();
-            String uUName = editUserName.getText().toString();
-            String uPass = editPassword.getText().toString();
-            String ageLoc = editAgeLoc.getText().toString();
+            String uName = editName.getText().toString().trim();
+            String uPh = editPhone.getText().toString().trim();
+            String uUName = editUserName.getText().toString().trim();
+            String uPass = editPassword.getText().toString().trim();
+            String ageLoc = editAgeLoc.getText().toString().trim();
 
             RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
 
-            if (uCat.toLowerCase().equals("user")) {
+            if (uCat.toLowerCase().equals("user") && !uUName.contains(" ") && !uPass.contains(" ")) {
                 User user = new User(uName, uPh, uUName, uPass, servProf, ageLoc);
                 Log.d(DEBUG_TAG, user.genUserString());
                 userRegistration(user, requestQueue);
             }
-            else {
+            else if (!uUName.contains(" ") && !uPass.contains(" ")) {
                 Helpline helpline = new Helpline(uName, uPh, uUName, uPass, servProf, ageLoc);
                 Log.d(DEBUG_TAG, helpline.genHelpString());
                 helplineRegistration(helpline,requestQueue);
+            }
+            else {
+                String msg = "Spaces detected in ID or Password";
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -356,6 +360,13 @@ public class RegisterActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    // Issue Fixed: #8 AVASS156
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
 

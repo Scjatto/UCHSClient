@@ -9,7 +9,7 @@ public class User {
     public String userAge;
 
     User(String name, String phone, String uid, String uPass, String uProf, String uAge) {
-        userName = name.split(" ");
+        userName = name.split(" ",2);
         userPh = phone;
         userID = uid;
         userPass = uPass;

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.text.SpannableString;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -58,6 +60,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
     private Button checkUpdate;
 
     private int guardianViewId = 0;
+    private int addViewID = 0;
 
     private String setTitle = null;
     private String titleType = null;
@@ -263,7 +266,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
             View view = updateGuardianLayout.getChildAt(i);
 
             if(view instanceof EditText) {
-                String tempString = ((EditText) view).getText().toString();
+                String tempString = ((EditText) view).getText().toString().trim();
                 if (!tempString.equals("")) {
                     if (condCnt == 0) {
                         guardiansToUpdate += tempString;
@@ -306,6 +309,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
                             if (status == 1) {
                                 int guardianNumber = response.getInt("#guardians");
                                 guardianViewId = guardianNumber;
+                                addViewID = guardianNumber;
                                 if (guardianNumber != 0) {
                                     JSONArray guardianList = response.getJSONArray("guardians");
                                     for (int i=0; i<guardianNumber; i++) {
@@ -347,7 +351,8 @@ public class ConfigureSopActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (guardianViewId < 15) {
-                createGuardianSection(updateGuardianLayout, "", ++ guardianViewId);
+                createGuardianSection(updateGuardianLayout, "", ++ addViewID);
+                ++ guardianViewId;
             } else {
                 String msg = "Max limit of 15 guardians reached";
                 Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
@@ -362,25 +367,9 @@ public class ConfigureSopActivity extends AppCompatActivity {
     }
 
 
-
-    private void createRemovebutton(RelativeLayout layout, int btid){
-        ImageButton imgbtn = new ImageButton(this);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        imgbtn.setImageResource(R.drawable.ic_delete_red);
-        imgbtn.setId(btid);
-        imgbtn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imgbtn.setLayoutParams(lp);
-        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        lp.addRule(RelativeLayout.RIGHT_OF, btid - 20);
-        if(btid > 21){
-            lp.addRule(RelativeLayout.BELOW, btid-1);
-        }
-        System.out.println(btid);
-        lp.setMargins(0,10,0 ,10);
-        layout.addView(imgbtn);
-    }
-    private void createTextView(RelativeLayout layout, String txtContent, int txtId) {
-        EditText editText = new EditText(this);
+    @SuppressLint("ClickableViewAccessibility")
+    private void createTextView(final RelativeLayout layout, String txtContent, int txtId) {
+        final EditText editText = new EditText(this);
         editText.setTextSize(22);
         editText.setId(txtId);
         editText.setHint("Enter guardian");
@@ -388,6 +377,30 @@ public class ConfigureSopActivity extends AppCompatActivity {
         editText.setBackgroundResource(R.drawable.edit_text_border);
         editText.setPadding(25,10,25,10);
         Log.d(TAG,"TXT_ID: " + String.valueOf(txtId));
+        Drawable removeEditTxt = getResources().getDrawable(R.drawable.ic_delete_red);
+        removeEditTxt.setBounds(0,0, removeEditTxt.getIntrinsicWidth(), removeEditTxt.getIntrinsicHeight());
+        editText.setCompoundDrawables(null, null, removeEditTxt, null);
+
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (editText.getRight() -
+                            editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Toast.makeText(getApplicationContext(), "CLicked!!", Toast.LENGTH_SHORT).show();
+//                        removeAndAdjust(layout, editText);
+                        editText.setVisibility(View.GONE);
+                        editText.setText("");
+                        guardianViewId --;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         RelativeLayout.LayoutParams editViewParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,

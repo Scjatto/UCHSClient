@@ -390,7 +390,7 @@ public class ConfigureSopActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (editText.getRight() -
                             editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        Toast.makeText(getApplicationContext(), "CLicked!!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "CLicked!!", Toast.LENGTH_SHORT).show();
 //                        removeAndAdjust(layout, editText);
                         editText.setVisibility(View.GONE);
                         editText.setText("");

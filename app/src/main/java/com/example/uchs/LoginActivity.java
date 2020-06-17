@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
 
             // TODO Check ID existing in the server
 
-            String id = idphone.getText().toString(); // TODO Changed to only UID when server entry is matched
+            String id = idphone.getText().toString().trim(); // TODO Changed to only UID when server entry is matched
             String pass = password.getText().toString();
             String uType = "";
             if (userType.toLowerCase().equals("user")) {
